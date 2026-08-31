@@ -1741,33 +1741,42 @@ function n(v){
  }
 
  var s=String(v==null?"":v)
- .trim()
- .replace(/\s/g,"");
+  .trim()
+  .replace(/\s/g,"")
+  .replace(/kr\.?/gi,"")
+  .replace(/%/g,"");
 
  if(!s)return 0;
 
- if(
-  s.indexOf(",")!==-1 &&
-  s.indexOf(".")!==-1
- ){
+ /* Understøtter både dansk og almindelig decimalnotation:
+    100.000,50 -> 100000.50
+    100.000    -> 100000
+    3,75       -> 3.75
+    3.75       -> 3.75 */
+ var hasComma=s.indexOf(",")!==-1;
+ var hasDot=s.indexOf(".")!==-1;
 
-  if(
-   s.lastIndexOf(",")>
-   s.lastIndexOf(".")
-  ){
+ if(hasComma && hasDot){
+  if(s.lastIndexOf(",")>s.lastIndexOf(".")){
    s=s.replace(/\./g,"").replace(",",".");
   }else{
    s=s.replace(/,/g,"");
   }
-
- }else if(s.indexOf(",")!==-1){
-
-  s=s.replace(",",".");
-
+ }else if(hasComma){
+  var commaParts=s.split(",");
+  if(commaParts.length>2 || (commaParts[1] && commaParts[1].length===3)){
+   s=s.replace(/,/g,"");
+  }else{
+   s=s.replace(",",".");
+  }
+ }else if(hasDot){
+  var dotParts=s.split(".");
+  if(dotParts.length>2 || (dotParts[1] && dotParts[1].length===3)){
+   s=s.replace(/\./g,"");
+  }
  }
 
  var x=parseFloat(s);
-
  return isFinite(x)?x:0;
 
 }
@@ -2722,12 +2731,10 @@ function editLoanName(i,v){
 function editLoanBalance(i,v){
 
  loans[i].balance=n(v);
-
  delete loans[i].manualInterest;
-
  refreshLoanCard(i);
-
  updateTax();
+ save();
 
 }
 
@@ -2735,12 +2742,10 @@ function editLoanBalance(i,v){
 function editLoanRate(i,v){
 
  loans[i].rate=n(v);
-
  delete loans[i].manualInterest;
-
  refreshLoanCard(i);
-
  updateTax();
+ save();
 
 }
 
