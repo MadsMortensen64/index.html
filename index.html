@@ -980,6 +980,9 @@ body.mbIntroDone .logo{animation:mbAppIn .55s cubic-bezier(.16,1,.3,1) forwards}
 @keyframes mbIconIn{to{opacity:1;transform:scale(1) translateY(0)}}@keyframes mbTextIn{to{opacity:1;transform:none}}@keyframes mbLine{to{width:54px}}@keyframes mbFade{to{opacity:1}}@keyframes mbLoad{to{transform:translateX(0)}}@keyframes mbRing{0%{opacity:0;transform:scale(.7)}30%{opacity:1}100%{opacity:0;transform:scale(1.35)}}@keyframes mbBreathe{50%{transform:translate(-50%,-55%) scale(1.08);opacity:.7}}@keyframes mbSplashOut{to{transform:scale(1.06);opacity:0;visibility:hidden}}@keyframes mbAppIn{to{opacity:1;transform:none}}
 </style>
 
+
+
+
 </head>
 
 <body>
@@ -1594,23 +1597,13 @@ Luk
    DEFAULT DATA
 ========================= */
 
-var DEFAULT_INCOMES=[
- {name:"SU",amount:6500},
- {name:"Bararbejde",amount:0}
-];
+var DEFAULT_INCOMES=[];
 
-var DEFAULT_EXPENSES=[
- {name:"Husleje",amount:2900},
- {name:"Spotify",amount:89},
- {name:"Disney+",amount:60},
- {name:"PureGym",amount:230},
- {name:"Transport",amount:90},
- {name:"Mad",amount:2400}
-];
+var DEFAULT_EXPENSES=[];
 
-var incomes=loadJson("mb_final_incomes",DEFAULT_INCOMES);
-var expenses=loadJson("mb_final_expenses",DEFAULT_EXPENSES);
-var loans=loadJson("mb_final_loans",[]);
+var incomes=loadJson("mb_final_v3_incomes",DEFAULT_INCOMES);
+var expenses=loadJson("mb_final_v3_expenses",DEFAULT_EXPENSES);
+var loans=loadJson("mb_final_v3_loans",[]);
 
 
 /* =========================
@@ -1633,17 +1626,17 @@ function save(){
  try{
 
   localStorage.setItem(
-   "mb_final_incomes",
+   "mb_final_v3_incomes",
    JSON.stringify(incomes)
   );
 
   localStorage.setItem(
-   "mb_final_expenses",
+   "mb_final_v3_expenses",
    JSON.stringify(expenses)
   );
 
   localStorage.setItem(
-   "mb_final_loans",
+   "mb_final_v3_loans",
    JSON.stringify(loans)
   );
 
@@ -1662,7 +1655,7 @@ function save(){
 
    if(el){
     localStorage.setItem(
-     "mb_final_"+id,
+     "mb_final_v3_"+id,
      el.value
     );
    }
@@ -1673,7 +1666,7 @@ function save(){
 
   if(special){
    localStorage.setItem(
-    "mb_final_transportSpecial",
+    "mb_final_v3_transportSpecial",
     special.value
    );
   }
@@ -1698,7 +1691,7 @@ function loadFields(){
 
   try{
 
-   var value=localStorage.getItem("mb_final_"+id);
+   var value=localStorage.getItem("mb_final_v3_"+id);
 
    if(
     value!==null &&
@@ -1715,7 +1708,7 @@ function loadFields(){
  try{
 
   var special=localStorage.getItem(
-   "mb_final_transportSpecial"
+   "mb_final_v3_transportSpecial"
   );
 
   if(
@@ -1741,42 +1734,33 @@ function n(v){
  }
 
  var s=String(v==null?"":v)
-  .trim()
-  .replace(/\s/g,"")
-  .replace(/kr\.?/gi,"")
-  .replace(/%/g,"");
+ .trim()
+ .replace(/\s/g,"");
 
  if(!s)return 0;
 
- /* Understøtter både dansk og almindelig decimalnotation:
-    100.000,50 -> 100000.50
-    100.000    -> 100000
-    3,75       -> 3.75
-    3.75       -> 3.75 */
- var hasComma=s.indexOf(",")!==-1;
- var hasDot=s.indexOf(".")!==-1;
+ if(
+  s.indexOf(",")!==-1 &&
+  s.indexOf(".")!==-1
+ ){
 
- if(hasComma && hasDot){
-  if(s.lastIndexOf(",")>s.lastIndexOf(".")){
+  if(
+   s.lastIndexOf(",")>
+   s.lastIndexOf(".")
+  ){
    s=s.replace(/\./g,"").replace(",",".");
   }else{
    s=s.replace(/,/g,"");
   }
- }else if(hasComma){
-  var commaParts=s.split(",");
-  if(commaParts.length>2 || (commaParts[1] && commaParts[1].length===3)){
-   s=s.replace(/,/g,"");
-  }else{
-   s=s.replace(",",".");
-  }
- }else if(hasDot){
-  var dotParts=s.split(".");
-  if(dotParts.length>2 || (dotParts[1] && dotParts[1].length===3)){
-   s=s.replace(/\./g,"");
-  }
+
+ }else if(s.indexOf(",")!==-1){
+
+  s=s.replace(",",".");
+
  }
 
  var x=parseFloat(s);
+
  return isFinite(x)?x:0;
 
 }
@@ -2731,10 +2715,12 @@ function editLoanName(i,v){
 function editLoanBalance(i,v){
 
  loans[i].balance=n(v);
+
  delete loans[i].manualInterest;
+
  refreshLoanCard(i);
+
  updateTax();
- save();
 
 }
 
@@ -2742,10 +2728,12 @@ function editLoanBalance(i,v){
 function editLoanRate(i,v){
 
  loans[i].rate=n(v);
+
  delete loans[i].manualInterest;
+
  refreshLoanCard(i);
+
  updateTax();
- save();
 
 }
 
@@ -2832,5 +2820,314 @@ updateTax();
 document.body.classList.add("mbIntroRunning");
 (function(){var splash=document.getElementById("mbSplash");setTimeout(function(){document.body.classList.remove("mbIntroRunning");document.body.classList.add("mbIntroDone")},3450);setTimeout(function(){if(splash)splash.remove()},4600)})();
 </script>
+
+<style id="loan-tax-fix-css">
+.loanCalc .loanTaxSaving{
+  margin-top:8px;
+  padding-top:8px;
+  border-top:1px solid rgba(112,81,159,.12);
+  color:#5f5274;
+  font-size:13px;
+  line-height:1.45;
+}
+.loanCalc .loanTaxSaving strong{
+  display:inline;
+  color:#70519f;
+  font-size:15px;
+}
+.loanCalc .loanMonthlyCost{
+  margin-top:3px;
+  color:#756b83;
+  font-size:12px;
+}
+.loanCalc .loanExplanation{
+  margin-top:3px;
+  color:#8a8094;
+  font-size:11px;
+}
+@media(max-width:600px){
+  .loanCalc .loanTaxSaving{font-size:12px}
+  .loanCalc .loanMonthlyCost{font-size:11px}
+}
+</style>
+
+
+<script id="loan-tax-fix-script">
+(function(){
+  /*
+    ROBUST LÅNEBEREGNING
+    ---------------------
+    Vi beregner direkte ud fra det, der står i hvert lånekort:
+      årlig renteudgift = restgæld × rente / 100
+
+    Skattebesparelsen er det, brugeren faktisk ønsker at se:
+      første 50.000 kr. negativ nettokapitalindkomst: ca. 33,6 %
+      resten: ca. 25,6 %
+    Dette er et vejledende standardestimat uden kirkeskat/andre kapitalposter.
+  */
+
+  var BASE_LOW = 0.336;
+  var BASE_HIGH = 0.256;
+  var SINGLE_THRESHOLD = 50000;
+
+  function parseAmount(value){
+    var s = String(value == null ? "" : value).trim().replace(/\s/g,"");
+    if(!s) return 0;
+
+    if(s.indexOf(",") !== -1 && s.indexOf(".") !== -1){
+      if(s.lastIndexOf(",") > s.lastIndexOf(".")){
+        s = s.replace(/\./g,"").replace(",",".");
+      }else{
+        s = s.replace(/,/g,"");
+      }
+    }else if(s.indexOf(",") !== -1){
+      s = s.replace(",",".");
+    }else{
+      /* Punkt alene bruges som decimaltegn i fx 4.5.
+         Flere punktummer tolkes som tusindtalsseparatorer. */
+      var parts = s.split(".");
+      if(parts.length > 2){
+        s = parts.join("");
+      }else if(parts.length === 2 && parts[1].length === 3 && /^\d+$/.test(parts[0]) && /^\d+$/.test(parts[1])){
+        s = parts.join("");
+      }
+    }
+
+    var x = parseFloat(s);
+    return isFinite(x) ? x : 0;
+  }
+
+  function money(v){
+    return Math.round(v).toLocaleString("da-DK");
+  }
+
+  function decimal(v){
+    return v.toLocaleString("da-DK",{minimumFractionDigits:0,maximumFractionDigits:2});
+  }
+
+  function annualInterestFromCard(card){
+    var balanceEl = card.querySelector(".loanBalance");
+    var rateEl = card.querySelector(".loanRate");
+    if(!balanceEl || !rateEl) return 0;
+
+    var balance = parseAmount(balanceEl.value);
+    var rate = parseAmount(rateEl.value);
+
+    if(balance <= 0 || rate <= 0) return 0;
+    return balance * rate / 100;
+  }
+
+  function taxValue(totalInterest){
+    totalInterest = Math.max(0,totalInterest);
+    var first = Math.min(totalInterest,SINGLE_THRESHOLD);
+    var rest = Math.max(0,totalInterest-SINGLE_THRESHOLD);
+    return first * BASE_LOW + rest * BASE_HIGH;
+  }
+
+  function marginalTaxValue(before,total){
+    return taxValue(before + total) - taxValue(before);
+  }
+
+  function addOrGetSavingNode(card){
+    var calc = card.querySelector(".loanCalc");
+    if(!calc) return null;
+
+    var node = calc.querySelector(".loanTaxSaving");
+    if(!node){
+      node = document.createElement("div");
+      node.className = "loanTaxSaving";
+      calc.appendChild(node);
+    }
+
+    return node;
+  }
+
+  function addOrGetCostNode(card){
+    var calc = card.querySelector(".loanCalc");
+    if(!calc) return null;
+
+    var node = calc.querySelector(".loanMonthlyCost");
+    if(!node){
+      node = document.createElement("div");
+      node.className = "loanMonthlyCost";
+      calc.appendChild(node);
+    }
+
+    return node;
+  }
+
+  function addOrGetExplanationNode(card){
+    var calc = card.querySelector(".loanCalc");
+    if(!calc) return null;
+
+    var node = calc.querySelector(".loanExplanation");
+    if(!node){
+      node = document.createElement("div");
+      node.className = "loanExplanation";
+      calc.appendChild(node);
+    }
+
+    return node;
+  }
+
+  function updateOneCard(card,beforeInterest){
+    if(!card) return 0;
+
+    var annual = annualInterestFromCard(card);
+    var saving = marginalTaxValue(beforeInterest,annual);
+
+    var formula = card.querySelector(".formula");
+    var annualNode = card.querySelector(".loanAnnual");
+
+    var balanceEl = card.querySelector(".loanBalance");
+    var rateEl = card.querySelector(".loanRate");
+    var balance = balanceEl ? parseAmount(balanceEl.value) : 0;
+    var rate = rateEl ? parseAmount(rateEl.value) : 0;
+
+    if(formula){
+      if(balance > 0 && rate > 0){
+        formula.textContent = money(balance) + " kr. × " + decimal(rate) + " %";
+      }else{
+        formula.textContent = "Restgæld × rente %";
+      }
+    }
+
+    if(annualNode){
+      annualNode.textContent = "= " + money(annual) + " kr. i renter / år";
+    }
+
+    var savingNode = addOrGetSavingNode(card);
+    var costNode = addOrGetCostNode(card);
+    var explanationNode = addOrGetExplanationNode(card);
+
+    if(annual > 0){
+      if(savingNode){
+        savingNode.innerHTML =
+          "Skattebesparelse: <strong>≈ " + money(saving) +
+          " kr. / år</strong><br>≈ <strong>" +
+          money(saving/12) + " kr. / måned</strong>";
+      }
+
+      if(costNode){
+        costNode.textContent =
+          "Rente efter estimeret skattebesparelse: ≈ " +
+          money(Math.max(0,annual-saving)) + " kr. / år";
+      }
+
+      if(explanationNode){
+        explanationNode.textContent =
+          "Vejledende standardestimat for en enlig.";
+      }
+    }else{
+      if(savingNode){
+        savingNode.textContent =
+          "Udfyld restgæld og rente for at se, hvor meget du cirka sparer i skat.";
+      }
+      if(costNode) costNode.textContent = "";
+      if(explanationNode) explanationNode.textContent = "";
+    }
+
+    return annual;
+  }
+
+  function updateAllLoans(){
+    var list = document.getElementById("loanList");
+    if(!list) return;
+
+    var cards = Array.prototype.slice.call(list.querySelectorAll(".loan"));
+    var totalInterest = 0;
+
+    cards.forEach(function(card){
+      var annual = updateOneCard(card,totalInterest);
+      totalInterest += annual;
+    });
+
+    var saving = taxValue(totalInterest);
+
+    var totalNode = document.getElementById("interestTotal");
+    var savingNode = document.getElementById("interestTaxSaving");
+    var countNode = document.getElementById("loanCount");
+
+    if(totalNode){
+      totalNode.textContent = money(totalInterest) + " kr.";
+    }
+    if(savingNode){
+      savingNode.textContent = "≈ " + money(saving/12) + " kr./md.";
+    }
+    if(countNode){
+      countNode.textContent = String(cards.length);
+    }
+
+    try{
+      if(typeof save === "function") save();
+    }catch(e){}
+  }
+
+  /*
+    Event delegation betyder, at nye lån også virker automatisk,
+    selv om den gamle renderLoans() bygger kortene om.
+  */
+  document.addEventListener("input",function(event){
+    if(event.target && event.target.closest && event.target.closest("#loanList")){
+      window.setTimeout(updateAllLoans,0);
+    }
+  });
+
+  document.addEventListener("change",function(event){
+    if(event.target && event.target.closest && event.target.closest("#loanList")){
+      window.setTimeout(updateAllLoans,0);
+    }
+  });
+
+  /*
+    Efter gammel renderLoans() er kørt, retter vi kortene.
+    Vi wrapper renderLoans, så + Tilføj lån også bliver korrekt.
+  */
+  if(typeof window.renderLoans === "function"){
+    var originalRenderLoans = window.renderLoans;
+    window.renderLoans = function(){
+      originalRenderLoans.apply(this,arguments);
+      window.setTimeout(updateAllLoans,0);
+    };
+  }
+
+  /*
+    Override de gamle loan handlers, så de aldrig kan sætte beregningen tilbage til 0.
+  */
+  window.refreshLoanCard = function(){
+    updateAllLoans();
+  };
+
+  window.loanAnnualInterest = function(loan){
+    var balance = parseAmount(loan && loan.balance);
+    var rate = parseAmount(loan && loan.rate);
+
+    if(balance > 0 && rate > 0){
+      return balance * rate / 100;
+    }
+
+    if(balance === 0 && rate === 0){
+      return parseAmount(loan && loan.manualInterest);
+    }
+
+    return 0;
+  };
+
+  window.taxSavingForInterest = function(amount){
+    return taxValue(amount);
+  };
+
+  /*
+    Giv brugeren et klart svar direkte i teksten over lånefeltet.
+  */
+  var loanDescriptions = document.querySelectorAll("#loanAcc .desc,#loanList");
+  void loanDescriptions;
+
+  window.setTimeout(updateAllLoans,80);
+  window.setTimeout(updateAllLoans,400);
+  window.setTimeout(updateAllLoans,1000);
+})();
+</script>
+
 </body>
 </html>
