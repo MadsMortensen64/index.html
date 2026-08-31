@@ -3,723 +3,2791 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+
 <title>Mit Budget</title>
+
+<!-- App ikon -->
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="theme-color" content="#123f31">
 
 <style>
 :root{
- --g:#123f31;--gd:#06251b;--gs:#dff2e7;
- --r:#a23b35;--rs:#fae6e4;
- --b:#2d638f;--bs:#e4eff8;
- --p:#70519f;--ps:#f0eafb;
- --txt:#263238;--mut:#718078;
- --card:rgba(255,255,255,.96);--line:rgba(20,50,40,.09);
+ --g:#123f31;
+ --gd:#06251b;
+ --gs:#dff2e7;
+
+ --r:#a23b35;
+ --rs:#fae6e4;
+
+ --b:#2d638f;
+ --bs:#e4eff8;
+
+ --p:#70519f;
+ --ps:#f0eafb;
+
+ --txt:#263238;
+ --mut:#718078;
+
+ --card:rgba(255,255,255,.96);
+ --line:rgba(20,50,40,.09);
+
  --sh:0 10px 30px rgba(25,45,35,.09)
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{background:#edf3ef;-webkit-text-size-adjust:100%}
-body{margin:0;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);overflow-x:hidden}
-.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 0 0,rgba(67,167,111,.27),transparent 32%),radial-gradient(circle at 100% 15%,rgba(62,123,184,.18),transparent 35%),radial-gradient(circle at 100% 90%,rgba(133,90,185,.15),transparent 38%),linear-gradient(135deg,#edf4ef,#f8f9f8 48%,#edf1f5)}
-.app{max-width:820px;margin:auto;padding:max(18px,env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
-button,input,select{font:inherit;touch-action:manipulation}
-button{cursor:pointer;border:0}
-.logo{width:min(100%,520px);min-height:112px;display:flex;align-items:center;gap:17px;padding:20px 26px;margin-bottom:22px;border-radius:40px 40px 40px 16px;background:radial-gradient(circle at 20% 40%,rgba(58,159,105,.35),transparent 35%),linear-gradient(135deg,#0d392b,#031d15);box-shadow:0 16px 38px rgba(0,0,0,.15)}
-.logoIcon{width:66px;height:66px;display:grid;place-items:center;border-radius:21px;color:#fff;font-size:30px;background:linear-gradient(135deg,#54bd82,#1a6546);box-shadow:inset 0 1px 7px rgba(255,255,255,.2),0 7px 18px rgba(0,0,0,.2)}
-.logo h1{margin:0;color:#fff;font-size:36px;letter-spacing:-1.5px}.logo p{margin:7px 0 0;color:#b3d1c0;font-size:15px}
-.hero{position:relative;overflow:hidden;min-height:235px;padding:30px;margin-bottom:20px;border-radius:25px;color:#fff;background:radial-gradient(circle at 15% 30%,rgba(53,169,111,.32),transparent 40%),linear-gradient(135deg,#18553e,#062b20);box-shadow:0 18px 42px rgba(8,55,38,.2)}
-.hero:after{content:"";position:absolute;width:400px;height:400px;right:-180px;bottom:-280px;border-radius:50%;background:rgba(71,177,119,.12);pointer-events:none}
-.label{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#c4d9ce}.balance{position:relative;z-index:1;margin-top:13px;font-size:clamp(46px,9vw,74px);font-weight:800;letter-spacing:-3px}.balance span{font-size:.48em;letter-spacing:0}.sub{position:relative;z-index:1;margin-top:5px;color:#d6e5de;font-size:16px}
-.badge{position:absolute;right:24px;bottom:20px;z-index:2;padding:9px 14px;border-radius:14px;font-size:13px;font-weight:700}.pos{background:rgba(79,191,124,.25);color:#dcffe7}.neg{background:rgba(214,69,69,.25);color:#ffe1e1}.neu{background:rgba(255,255,255,.13);color:#fff}
-.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}.sumCard{display:flex;align-items:center;gap:11px;padding:16px 13px;border-radius:20px;background:var(--card);border:1px solid var(--line);box-shadow:var(--sh)}.ico{width:54px;height:54px;flex:none;display:grid;place-items:center;border-radius:17px;font-size:23px}.ig{background:var(--gs);color:var(--g)}.ir{background:var(--rs);color:var(--r)}.ib{background:var(--bs);color:var(--b)}.ip{background:var(--ps);color:var(--p)}.sumCard small{display:block;margin-bottom:3px;color:var(--mut);font-size:12px}.sumCard strong{font-size:18px;white-space:nowrap}.month{font-size:11px;font-weight:700}.green{color:#258153}.red{color:#b8423b}.blue{color:#3674a5}
-.acc{margin-bottom:10px;border-radius:21px;background:var(--card);border:1px solid var(--line);box-shadow:var(--sh);overflow:hidden}.accHead{width:100%;min-height:80px;display:flex;align-items:center;padding:15px;background:transparent;color:var(--txt);text-align:left}.accIcon{width:52px;height:52px;flex:none;display:grid;place-items:center;margin-right:14px;border-radius:17px;font-size:22px}.accTitle{flex:1}.accTitle b{display:block;font-size:19px}.accTitle span{display:block;margin-top:3px;color:var(--mut);font-size:13px}.chev{padding:10px;font-size:22px}.acc.open .chev{transform:rotate(180deg)}.accBody{display:none;padding:0 15px 17px}.acc.open .accBody{display:block}
-.box{padding:15px;border-radius:16px;background:rgba(245,248,246,.85);border:1px solid rgba(0,0,0,.05)}.box h3{margin:0 0 13px;font-size:16px}.row{display:grid;grid-template-columns:1fr 120px 42px;gap:8px;margin-bottom:9px}
-input,select{width:100%;-webkit-user-select:text;user-select:text;min-width:0;min-height:44px;padding:12px;border:1px solid #d9e0dc;border-radius:11px;background:#fff;color:var(--txt);font-size:16px;outline:none;-webkit-appearance:none;appearance:none}input:focus,select:focus{border-color:#5a9879;box-shadow:0 0 0 3px rgba(90,152,121,.13)}
-.del{min-height:44px;border-radius:11px;color:#fff;background:#b84841;font-size:21px}.add{width:100%;min-height:48px;margin-top:5px;border:1px dashed #85a897;border-radius:12px;background:rgba(220,239,229,.55);color:#286047;font-size:14px;font-weight:700}
-.tax{padding:15px;border-radius:17px;background:radial-gradient(circle at 90% 10%,rgba(126,86,177,.13),transparent 30%),rgba(247,245,252,.9);border:1px solid rgba(112,81,159,.12)}.taxSec{margin-bottom:22px}.taxSec:last-child{margin-bottom:0}.taxTitle{margin-bottom:6px;color:var(--p);font-size:17px;font-weight:800}.desc{margin:0 0 12px;color:#766e84;font-size:13px;line-height:1.45}
-.taxRow{display:flex;align-items:center;gap:8px;padding:10px 11px;margin-bottom:7px;border-radius:13px;background:rgba(255,255,255,.78);border:1px solid rgba(112,81,159,.14)}.taxLabel{flex:1;font-size:14px}.taxRow input{width:110px;padding:7px;border:none;background:transparent;text-align:right}.q{width:34px;height:34px;min-width:34px;display:grid;place-items:center;border-radius:50%;background:var(--p);color:#fff;font-weight:800}
-.auto{overflow:hidden;margin-bottom:12px;border-radius:14px;background:rgba(255,255,255,.55);border:1px solid rgba(112,81,159,.15)}.autoHead{padding:12px 13px 5px;font-size:14px;font-weight:800}.autoRow{display:flex;justify-content:space-between;gap:15px;padding:9px 13px;font-size:14px}.autoTotal{border-top:1px solid rgba(112,81,159,.13);font-weight:800;color:var(--p)}
-.loan{padding:14px;margin-bottom:9px;border-radius:16px;background:rgba(255,255,255,.84);border:1px solid rgba(112,81,159,.16)}.loanTop{display:flex;align-items:center;gap:8px;margin-bottom:10px}.loanName{flex:1!important;border:none!important;background:transparent!important;font-size:16px!important;font-weight:750!important;box-shadow:none!important;padding:6px!important}.loanType{margin-bottom:9px}.loanFields{display:grid;grid-template-columns:1fr 1fr;gap:8px}.loanCalc{margin-top:10px;padding:11px 12px;border-radius:13px;background:#f3eff9;color:#625875}.loanCalc .formula{font-size:13px;line-height:1.45}.loanCalc strong{display:block;color:var(--p);font-size:17px;margin-top:2px}.loanCalc .saving{margin-top:8px;font-size:13px;line-height:1.45}.loanCalc .saving strong{display:inline;color:var(--p);font-size:15px}.loanCalc .net{margin-top:4px;font-size:12px;color:#756b83}.loanDel{width:42px;min-height:42px;border-radius:11px;color:#fff;background:#b84841;font-size:19px}
-.taxSummary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;padding:14px;border-radius:15px;background:rgba(255,255,255,.6);border:1px solid rgba(112,81,159,.18)}.taxSummary small{display:block;margin-bottom:5px;color:#766e84;font-size:11px}.taxSummary strong{color:var(--p);font-size:20px}.note{margin:12px 0 0;color:#7d748c;font-size:11px;line-height:1.5}
-.info{display:flex;align-items:center;gap:14px;margin-top:13px;padding:18px;border-radius:20px;background:var(--card);border:1px solid var(--line);box-shadow:var(--sh)}.infoI{width:48px;height:48px;flex:none;display:grid;place-items:center;border-radius:50%;color:var(--g);background:var(--gs);font-size:22px}.info b{display:block;margin-bottom:4px}.info span{color:var(--mut);font-size:13px}.foot{margin-top:28px;padding:0 8px;text-align:center;color:#8b9690;font-size:10px;line-height:1.55}
-.modal{position:fixed;inset:0;display:none;align-items:flex-end;justify-content:center;padding:16px;background:rgba(0,0,0,.42);z-index:9999}.modal.show{display:flex}.modalBox{width:100%;max-width:500px;padding:24px;border-radius:24px;background:#fff;box-shadow:0 25px 70px rgba(0,0,0,.28)}.modalBox h2{margin:0 0 10px;font-size:22px}.modalBox p{margin:0;color:var(--mut);line-height:1.55}.close{width:100%;min-height:50px;margin-top:20px;border-radius:13px;background:var(--g);color:#fff;font-weight:700}
-@media(max-width:600px){.app{padding-left:11px;padding-right:11px}.logo{min-height:94px;padding:15px 18px;border-radius:32px 32px 32px 14px}.logoIcon{width:56px;height:56px;border-radius:17px;font-size:25px}.logo h1{font-size:29px}.logo p{font-size:13px}.hero{min-height:210px;padding:23px 20px;border-radius:22px}.balance{font-size:54px}.badge{right:17px;bottom:16px}.summary{gap:7px}.sumCard{flex-direction:column;align-items:flex-start;gap:6px;padding:11px 9px}.ico{width:42px;height:42px;border-radius:14px;font-size:18px}.sumCard small{font-size:10px}.sumCard strong{font-size:14px}.month{font-size:9px}.accHead{min-height:74px;padding:11px}.accIcon{width:47px;height:47px;margin-right:11px;border-radius:15px;font-size:19px}.accTitle b{font-size:17px}.accTitle span{font-size:11px}.chev{padding:8px}.accBody{padding:0 10px 12px}.box,.tax{padding:11px}.row{grid-template-columns:minmax(0,1fr) 90px 44px;gap:6px}.row input{padding:11px 8px;font-size:14px}.taxRow{padding:9px}.taxLabel{font-size:13px}.taxRow input{width:82px;font-size:14px}.loanFields{grid-template-columns:1fr 1fr}.loanType{font-size:13px}.taxSummary{gap:8px;padding:11px}.taxSummary strong{font-size:18px}.modal{padding:10px}.modalBox{padding:20px;border-radius:22px}}
-</style>
 
-<style>
-@media(max-width:600px){
-  .loanFields{
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
-    gap:8px;
-  }
-  .loanFields input{
-    min-width:0;
-    font-size:14px;
-  }
-  .loanType{
-    width:100%;
-  }
-}
-</style>
-
-<style>
-.loanCalc .saving{margin-top:8px;padding-top:8px;border-top:1px solid rgba(112,81,159,.12)}
-.loanCalc .saving strong{font-size:15px;color:#70519f}
-.loanCalc .net{margin-top:4px}
-#transportCalculated,#transportTaxSaving,#ligningTaxSaving,#interestTaxSaving{color:#70519f;font-weight:800}
-@media(max-width:600px){
-  #transportKm,#transportDays{width:82px}
-  #transportSpecial{font-size:14px}
-}
-</style>
-<style>
-.foot{
-  max-width:760px;
-  margin-left:auto;
-  margin-right:auto;
-  letter-spacing:.01em;
-}
-.foot div:nth-child(2){
-  color:#6f7d76;
-  font-weight:700;
-}
-.foot div:nth-child(3){
-  color:#9aa39e;
-  font-size:9px;
-}
-@media(max-width:600px){
-  .foot{font-size:9px;line-height:1.55;padding:0 10px}
-  .foot div:nth-child(2){font-size:9px}
-  .foot div:nth-child(3){font-size:8.5px}
-}
-</style>
-</head>
-<body>
-<div class="bg"></div>
-<main class="app">
-
-<div class="logo"><div class="logoIcon">↗</div><div><h1>Mit Budget</h1><p>Dit personlige økonomiske overblik</p></div></div>
-
-<section class="hero">
-<div class="label">Til rådighed denne måned</div>
-<div class="balance" id="balance">0 <span>kr.</span></div>
-<div class="sub">Efter udgifter og investering</div>
-<div class="badge neu" id="badge">− Balance</div>
-</section>
-
-<div class="summary">
-<div class="sumCard"><div class="ico ig">↗</div><div><small>Indkomst</small><strong id="sumIncome">0 kr.</strong><div class="month green">/ md.</div></div></div>
-<div class="sumCard"><div class="ico ir">↘</div><div><small>Udgifter</small><strong id="sumExpense">0 kr.</strong><div class="month red">/ md.</div></div></div>
-<div class="sumCard"><div class="ico ib">◈</div><div><small>Investering</small><strong id="sumInvest">0 kr.</strong><div class="month blue">/ md.</div></div></div>
-</div>
-
-<div class="acc">
-<button type="button" class="accHead accordion-toggle" onclick="toggleAcc(this)"><div class="accIcon ig">↗</div><div class="accTitle"><b>Indtægter</b><span>Se og redigér dine indtægter</span></div><div class="chev">⌄</div></button>
-<div class="accBody"><div class="box"><h3>Mine indtægter</h3><div id="incomeList"></div><button type="button" class="add" id="addIncome" onclick="addIncome()">+ Tilføj ny indtægt</button></div></div>
-</div>
-
-<div class="acc">
-<button type="button" class="accHead accordion-toggle" onclick="toggleAcc(this)"><div class="accIcon ir">↘</div><div class="accTitle"><b>Udgifter</b><span>Se og redigér dine udgifter</span></div><div class="chev">⌄</div></button>
-<div class="accBody"><div class="box"><h3>Mine udgifter</h3><div id="expenseList"></div><button type="button" class="add" id="addExpense" onclick="addExpense()">+ Tilføj ny udgift</button></div></div>
-</div>
-
-<div class="acc">
-<button type="button" class="accHead accordion-toggle" onclick="toggleAcc(this)"><div class="accIcon ib">◈</div><div class="accTitle"><b>Investering</b><span>Fast investering pr. måned</span></div><div class="chev">⌄</div></button>
-<div class="accBody"><div class="box"><h3>Fast månedlig investering</h3><input id="investment" type="text" inputmode="decimal" min="0" placeholder="Fx. 1000 kr." oninput="updateBudget()"></div></div>
-</div>
-
-<div class="acc">
-<button type="button" class="accHead accordion-toggle" onclick="toggleAcc(this)"><div class="accIcon ip">%</div><div class="accTitle"><b style="color:#70519f">Skat & fradrag</b><span style="color:#8067a5">Se hvad dine fradrag betyder for skatten</span></div><div class="chev">⌄</div></button>
-
-<div class="accBody"><div class="tax">
-
-<div class="taxSec">
-<div class="taxTitle">Arbejdsindkomst & automatiske fradrag</div>
-<p class="desc">Beskæftigelses- og jobfradrag beregnes automatisk ud fra din arbejdsindkomst.</p>
-<div class="taxRow"><div class="taxLabel">Årlig arbejdsindkomst før skat</div><input id="annualIncome" type="text" inputmode="decimal" placeholder="0" oninput="updateTax()"><button class="q" type="button" onclick="showInfo('Årlig arbejdsindkomst','Indtast din forventede AM-bidragspligtige arbejdsindkomst før skat. SU skal normalt ikke indgå som arbejdsindkomst i denne beregning.')">?</button></div>
-<div class="auto"><div class="autoHead">Automatiske fradrag – 2026</div><div class="autoRow"><span>Beskæftigelsesfradrag</span><span id="employment">0 kr.</span></div><div class="autoRow"><span>Jobfradrag</span><span id="job">0 kr.</span></div><div class="autoRow autoTotal"><span>Automatiske fradrag i alt</span><span id="autoTotal">0 kr.</span></div></div>
-</div>
-
-<div class="taxSec">
-<div class="taxTitle">Ligningsmæssige fradrag</div>
-<p class="desc">Indtast det årlige fradragsbeløb. Dette er ikke nødvendigvis det samme som din faktiske udgift.</p>
-<div class="auto" style="padding:12px;margin-bottom:10px">
-  <div class="autoHead" style="padding:2px 0 9px">Befordring – beregn automatisk</div>
-  <div class="taxRow">
-    <div class="taxLabel">Km tur/retur pr. arbejdsdag</div>
-    <input id="transportKm" type="text" inputmode="decimal" placeholder="Fx. 48">
-    <button class="q" type="button" onclick="showInfo('Befordringsfradrag','SKAT beregner ud fra den reelle kørselsafstand pr. dag. De første 24 km pr. dag giver ikke fradrag. I 2026 er satsen 3,17 kr./km for 25-120 km og 1,59 kr./km over 120 km. I yderkommuner og på visse småøer er satsen 3,51 kr./km.')" >?</button>
-  </div>
-  <div class="taxRow">
-    <div class="taxLabel">Arbejdsdage med transport / år</div>
-    <input id="transportDays" type="text" inputmode="decimal" placeholder="Fx. 45">
-  </div>
-  <div class="taxRow">
-    <div class="taxLabel">Yderkommune / relevant lille ø</div>
-    <select id="transportSpecial" onchange="updateTax()">
-      <option value="no">Nej</option>
-      <option value="yes">Ja</option>
-    </select>
-  </div>
-  <div class="autoRow autoTotal"><span>Beregnet befordringsfradrag</span><span id="transportCalculated">0 kr.</span></div>
-  <div class="autoRow"><span>Vejledende skattebesparelse</span><span id="transportTaxSaving">0 kr./md.</span></div>
-</div>
-
-<input id="transport" type="hidden" value="0" inputmode="decimal">
-<div class="taxRow"><div class="taxLabel">Fagforening</div><input id="union" type="text" inputmode="decimal" placeholder="0" oninput="updateTax()"><button class="q" type="button" onclick="showInfo('Fagforening','I 2026 er det maksimale fradrag for fagforeningskontingent 7.000 kr. årligt.')">?</button></div>
-<div class="taxRow"><div class="taxLabel">A-kasse / efterløn / fleksydelse</div><input id="akasse" type="text" inputmode="decimal" placeholder="0" oninput="updateTax()"><button class="q" type="button" onclick="showInfo('A-kasse','Kontingent til A-kasse samt relevante bidrag til efterløn eller fleksydelse kan være fradragsberettiget efter de gældende regler.')">?</button></div>
-<div class="taxRow"><div class="taxLabel">Øvrige lønmodtagerudgifter</div><input id="work" type="text" inputmode="decimal" placeholder="0" oninput="updateTax()"><button class="q" type="button" onclick="showInfo('Øvrige lønmodtagerudgifter','Visse nødvendige arbejdsudgifter kan give fradrag. I 2026 er bundgrænsen 7.600 kr. for denne kategori.')">?</button></div>
-<div class="auto">
-  <div class="autoHead">Ligningsmæssige fradrag</div>
-  <div class="autoRow"><span>Samlet fradragsberettiget beløb</span><span id="ligningTotal">0 kr.</span></div>
-  <div class="autoRow autoTotal"><span>Vejledende skattebesparelse / md.</span><span id="ligningTaxSaving">0 kr.</span></div>
-</div>
-</div>
-
-<div class="taxSec">
-<div class="taxTitle">Mine lån & gæld</div>
-<p class="desc">Indtast restgæld og årlig rente. Appen viser både renteudgiften og et vejledende estimat for, hvor meget renteudgiften kan reducere din skat pr. måned.</p>
-<div id="loanList"></div>
-<button type="button" class="add" id="addLoan" onclick="addLoan()">+ Tilføj lån eller gæld</button>
-</div>
-
-<div class="taxSummary">
-<div><small>Automatiske fradrag</small><strong id="autoSummary">0 kr.</strong></div>
-<div><small>Ligningsmæssige fradrag</small><strong id="ligningSummary">0 kr.</strong></div>
-</div>
-
-<div class="taxSummary">
-<div><small>Renteudgifter / år</small><strong id="interestTotal">0 kr.</strong></div>
-<div><small>Skattebesparelse / md.*</small><strong id="interestTaxSaving">0 kr.</strong></div>
-</div>
-
-<p class="note">* Skattebesparelsen på renter er et vejledende estimat. For en enlig beregnes værdien her som ca. 33 % af negativ nettokapitalindkomst op til 50.000 kr. og ca. 25 % af resten. Din faktiske skatteeffekt afhænger bl.a. af anden kapitalindkomst, kommune og øvrige skatteforhold.</p>
-
-</div></div></div>
-
-<div class="info">
-<div class="infoI">i</div>
-<div><b>Hjælp til fradrag</b><span>Tryk på ? ved de enkelte poster for en enkel forklaring.</span></div>
-</div>
-
-<div class="foot">
-  <div>
-    Tal og skattesatser er baseret på offentligt tilgængelige oplysninger fra
-    Skattestyrelsen og Skatteministeriet for 2026. Se skat.dk og Den juridiske
-    vejledning for de konkrete regler.
-  </div>
-  <div style="margin-top:8px;">
-    © 2026 Mads Mortensen · Mit Budget · Alle rettigheder forbeholdes.
-  </div>
-  <div style="margin-top:3px;">
-    Design, tekst, struktur og kode er udviklet til Mit Budget.
-  </div>
-</div>
-
-<script>
-var DEFAULT_INCOMES=[
-  {name:"SU",amount:6500},
-  {name:"Bararbejde",amount:0}
-];
-
-var DEFAULT_EXPENSES=[
-  {name:"Husleje",amount:2900},
-  {name:"Spotify",amount:89},
-  {name:"Disney+",amount:60},
-  {name:"PureGym",amount:230},
-  {name:"Transport",amount:90},
-  {name:"Mad",amount:2400}
-];
-
-var incomes=loadJson("mb_final_incomes",DEFAULT_INCOMES);
-var expenses=loadJson("mb_final_expenses",DEFAULT_EXPENSES);
-var loans=loadJson("mb_final_loans",[]);
-
-function loadJson(key,fallback){
-  try{
-    var raw=localStorage.getItem(key);
-    return raw?JSON.parse(raw):JSON.parse(JSON.stringify(fallback));
-  }catch(e){
-    return JSON.parse(JSON.stringify(fallback));
-  }
+*{
+ box-sizing:border-box;
+ -webkit-tap-highlight-color:transparent
 }
 
-/* Dansk / engelsk decimal-input: 3,40 og 3.40 virker begge. */
-function n(v){
-  if(typeof v==="number") return isFinite(v)?v:0;
-
-  var s=String(v==null?"":v).trim().replace(/\s/g,"");
-  if(!s) return 0;
-
-  if(s.indexOf(",")!==-1 && s.indexOf(".")!==-1){
-    if(s.lastIndexOf(",")>s.lastIndexOf(".")){
-      s=s.replace(/\./g,"").replace(",",".");
-    }else{
-      s=s.replace(/,/g,"");
-    }
-  }else if(s.indexOf(",")!==-1){
-    s=s.replace(",",".");
-  }
-
-  var x=parseFloat(s);
-  return isFinite(x)?x:0;
+html{
+ background:#edf3ef;
+ -webkit-text-size-adjust:100%
 }
 
-function fmt(v){
-  return Math.round(n(v)).toLocaleString("da-DK");
+body{
+ margin:0;
+ min-height:100vh;
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+ color:var(--txt);
+ overflow-x:hidden
 }
 
-function fmtDecimal(v){
-  return n(v).toLocaleString("da-DK",{minimumFractionDigits:0,maximumFractionDigits:2});
+.bg{
+ position:fixed;
+ inset:0;
+ z-index:-1;
+ pointer-events:none;
+ background:
+ radial-gradient(circle at 0 0,rgba(67,167,111,.27),transparent 32%),
+ radial-gradient(circle at 100% 15%,rgba(62,123,184,.18),transparent 35%),
+ radial-gradient(circle at 100% 90%,rgba(133,90,185,.15),transparent 38%),
+ linear-gradient(135deg,#edf4ef,#f8f9f8 48%,#edf1f5)
 }
 
-function save(){
-  try{
-    localStorage.setItem("mb_final_incomes",JSON.stringify(incomes));
-    localStorage.setItem("mb_final_expenses",JSON.stringify(expenses));
-    localStorage.setItem("mb_final_loans",JSON.stringify(loans));
-
-    ["investment","annualIncome","transport","transportKm","transportDays","union","akasse","work"].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el)localStorage.setItem("mb_final_"+id,el.value);
-    });
-
-    var special=document.getElementById("transportSpecial");
-    if(special)localStorage.setItem("mb_final_transportSpecial",special.value);
-  }catch(e){}
+.app{
+ max-width:820px;
+ margin:auto;
+ padding:max(18px,env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))
 }
 
-function loadFields(){
-  ["investment","annualIncome","transport","transportKm","transportDays","union","akasse","work"].forEach(function(id){
-    try{
-      var value=localStorage.getItem("mb_final_"+id);
-      if(value!==null && document.getElementById(id))document.getElementById(id).value=value;
-    }catch(e){}
-  });
-
-  try{
-    var special=localStorage.getItem("mb_final_transportSpecial");
-    if(special!==null && document.getElementById("transportSpecial")){
-      document.getElementById("transportSpecial").value=special;
-    }
-  }catch(e){}
+button,
+input,
+select{
+ font:inherit;
+ touch-action:manipulation
 }
 
-function escapeHtml(v){
-  return String(v).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+button{
+ cursor:pointer;
+ border:0
 }
+
+/* =========================
+   LOGO
+========================= */
+
+.logo{
+ width:min(100%,520px);
+ min-height:112px;
+ display:flex;
+ align-items:center;
+ gap:17px;
+ padding:20px 26px;
+ margin-bottom:22px;
+ border-radius:40px 40px 40px 16px;
+
+ background:
+ radial-gradient(circle at 20% 40%,rgba(58,159,105,.35),transparent 35%),
+ linear-gradient(135deg,#0d392b,#031d15);
+
+ box-shadow:0 16px 38px rgba(0,0,0,.15)
+}
+
+.logoImage{
+ width:72px;
+ height:72px;
+ flex:none;
+ object-fit:contain;
+ border-radius:20px;
+ filter:drop-shadow(0 7px 12px rgba(0,0,0,.18))
+}
+
+.logo h1{
+ margin:0;
+ color:#fff;
+ font-size:36px;
+ letter-spacing:-1.5px
+}
+
+.logo p{
+ margin:7px 0 0;
+ color:#b3d1c0;
+ font-size:15px
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+ position:relative;
+ overflow:hidden;
+ min-height:235px;
+ padding:30px;
+ margin-bottom:20px;
+ border-radius:25px;
+ color:#fff;
+
+ background:
+ radial-gradient(circle at 15% 30%,rgba(53,169,111,.32),transparent 40%),
+ linear-gradient(135deg,#18553e,#062b20);
+
+ box-shadow:0 18px 42px rgba(8,55,38,.2)
+}
+
+.hero:after{
+ content:"";
+ position:absolute;
+ width:400px;
+ height:400px;
+ right:-180px;
+ bottom:-280px;
+ border-radius:50%;
+ background:rgba(71,177,119,.12);
+ pointer-events:none
+}
+
+.label{
+ font-size:13px;
+ font-weight:800;
+ text-transform:uppercase;
+ letter-spacing:1.2px;
+ color:#c4d9ce
+}
+
+.balance{
+ position:relative;
+ z-index:1;
+ margin-top:13px;
+ font-size:clamp(46px,9vw,74px);
+ font-weight:800;
+ letter-spacing:-3px
+}
+
+.balance span{
+ font-size:.48em;
+ letter-spacing:0
+}
+
+.sub{
+ position:relative;
+ z-index:1;
+ margin-top:5px;
+ color:#d6e5de;
+ font-size:16px
+}
+
+.badge{
+ position:absolute;
+ right:24px;
+ bottom:20px;
+ z-index:2;
+ padding:9px 14px;
+ border-radius:14px;
+ font-size:13px;
+ font-weight:700
+}
+
+.pos{
+ background:rgba(79,191,124,.25);
+ color:#dcffe7
+}
+
+.neg{
+ background:rgba(214,69,69,.25);
+ color:#ffe1e1
+}
+
+.neu{
+ background:rgba(255,255,255,.13);
+ color:#fff
+}
+
+/* =========================
+   SUMMARY
+========================= */
+
+.summary{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:12px;
+ margin-bottom:20px
+}
+
+.sumCard{
+ display:flex;
+ align-items:center;
+ gap:11px;
+ padding:16px 13px;
+ border-radius:20px;
+ background:var(--card);
+ border:1px solid var(--line);
+ box-shadow:var(--sh)
+}
+
+.ico{
+ width:54px;
+ height:54px;
+ flex:none;
+ display:grid;
+ place-items:center;
+ border-radius:17px;
+ font-size:23px
+}
+
+.ig{
+ background:var(--gs);
+ color:var(--g)
+}
+
+.ir{
+ background:var(--rs);
+ color:var(--r)
+}
+
+.ib{
+ background:var(--bs);
+ color:var(--b)
+}
+
+.ip{
+ background:var(--ps);
+ color:var(--p)
+}
+
+.sumCard small{
+ display:block;
+ margin-bottom:3px;
+ color:var(--mut);
+ font-size:12px
+}
+
+.sumCard strong{
+ font-size:18px;
+ white-space:nowrap
+}
+
+.month{
+ font-size:11px;
+ font-weight:700
+}
+
+.green{color:#258153}
+.red{color:#b8423b}
+.blue{color:#3674a5}
 
 /* =========================
    ACCORDION
 ========================= */
 
-function toggleAcc(button){
-  var acc=button.closest(".acc");
-  if(acc)acc.classList.toggle("open");
+.acc{
+ margin-bottom:10px;
+ border-radius:21px;
+ background:var(--card);
+ border:1px solid var(--line);
+ box-shadow:var(--sh);
+ overflow:hidden
+}
+
+.accHead{
+ width:100%;
+ min-height:80px;
+ display:flex;
+ align-items:center;
+ padding:15px;
+ background:transparent;
+ color:var(--txt);
+ text-align:left
+}
+
+.accIcon{
+ width:52px;
+ height:52px;
+ flex:none;
+ display:grid;
+ place-items:center;
+ margin-right:14px;
+ border-radius:17px;
+ font-size:22px
+}
+
+.accTitle{
+ flex:1
+}
+
+.accTitle b{
+ display:block;
+ font-size:19px
+}
+
+.accTitle span{
+ display:block;
+ margin-top:3px;
+ color:var(--mut);
+ font-size:13px
+}
+
+.chev{
+ padding:10px;
+ font-size:22px;
+ transition:.2s
+}
+
+.acc.open .chev{
+ transform:rotate(180deg)
+}
+
+.accBody{
+ display:none;
+ padding:0 15px 17px
+}
+
+.acc.open .accBody{
+ display:block
 }
 
 /* =========================
-   INCOME
+   BOX
 ========================= */
 
-function renderIncomes(){
-  var list=document.getElementById("incomeList");
-  var out="";
-
-  incomes.forEach(function(item,i){
-    out+='<div class="row">';
-    out+='<input type="text" value="'+escapeHtml(item.name)+'" placeholder="Navn" oninput="editIncomeName('+i+',this.value)">';
-    out+='<input type="text" inputmode="decimal" value="'+fmtDecimal(item.amount)+'" placeholder="Beløb" oninput="editIncomeAmount('+i+',this.value)">';
-    out+='<button type="button" class="del" onclick="removeIncome('+i+')">×</button>';
-    out+='</div>';
-  });
-
-  list.innerHTML=out;
+.box{
+ padding:15px;
+ border-radius:16px;
+ background:rgba(245,248,246,.85);
+ border:1px solid rgba(0,0,0,.05)
 }
 
-function addIncome(){
-  incomes.push({name:"Ny indtægt",amount:0});
-  renderIncomes();
-  updateBudget();
+.box h3{
+ margin:0 0 13px;
+ font-size:16px
 }
 
-function editIncomeName(i,v){incomes[i].name=v;save()}
-function editIncomeAmount(i,v){incomes[i].amount=n(v);updateBudget()}
-function removeIncome(i){incomes.splice(i,1);renderIncomes();updateBudget()}
-
-/* =========================
-   EXPENSE
-========================= */
-
-function renderExpenses(){
-  var list=document.getElementById("expenseList");
-  var out="";
-
-  expenses.forEach(function(item,i){
-    out+='<div class="row">';
-    out+='<input type="text" value="'+escapeHtml(item.name)+'" placeholder="Navn" oninput="editExpenseName('+i+',this.value)">';
-    out+='<input type="text" inputmode="decimal" value="'+fmtDecimal(item.amount)+'" placeholder="Beløb" oninput="editExpenseAmount('+i+',this.value)">';
-    out+='<button type="button" class="del" onclick="removeExpense('+i+')">×</button>';
-    out+='</div>';
-  });
-
-  list.innerHTML=out;
+.row{
+ display:grid;
+ grid-template-columns:1fr 120px 42px;
+ gap:8px;
+ margin-bottom:9px
 }
 
-function addExpense(){
-  expenses.push({name:"Ny udgift",amount:0});
-  renderExpenses();
-  updateBudget();
+input,
+select{
+ width:100%;
+ -webkit-user-select:text;
+ user-select:text;
+ min-width:0;
+ min-height:44px;
+ padding:12px;
+ border:1px solid #d9e0dc;
+ border-radius:11px;
+ background:#fff;
+ color:var(--txt);
+ font-size:16px;
+ outline:none;
+ -webkit-appearance:none;
+ appearance:none
 }
 
-function editExpenseName(i,v){expenses[i].name=v;save()}
-function editExpenseAmount(i,v){expenses[i].amount=n(v);updateBudget()}
-function removeExpense(i){expenses.splice(i,1);renderExpenses();updateBudget()}
+input:focus,
+select:focus{
+ border-color:#5a9879;
+ box-shadow:0 0 0 3px rgba(90,152,121,.13)
+}
 
-/* =========================
-   BUDGET
-========================= */
+.del{
+ min-height:44px;
+ border-radius:11px;
+ color:#fff;
+ background:#b84841;
+ font-size:21px
+}
 
-function updateBudget(){
-  var income=incomes.reduce(function(s,i){return s+n(i.amount)},0);
-  var expense=expenses.reduce(function(s,i){return s+n(i.amount)},0);
-  var invest=n(document.getElementById("investment").value);
-  var balance=income-expense-invest;
-
-  document.getElementById("sumIncome").textContent=fmt(income)+" kr.";
-  document.getElementById("sumExpense").textContent=fmt(expense)+" kr.";
-  document.getElementById("sumInvest").textContent=fmt(invest)+" kr.";
-  document.getElementById("balance").innerHTML=fmt(balance)+' <span>kr.</span>';
-
-  var badge=document.getElementById("badge");
-  badge.className="badge";
-
-  if(balance>0){
-    badge.classList.add("pos");
-    badge.textContent="↗ Positiv økonomi";
-  }else if(balance<0){
-    badge.classList.add("neg");
-    badge.textContent="↘ Negativ økonomi";
-  }else{
-    badge.classList.add("neu");
-    badge.textContent="− Balance";
-  }
-
-  save();
+.add{
+ width:100%;
+ min-height:48px;
+ margin-top:5px;
+ border:1px dashed #85a897;
+ border-radius:12px;
+ background:rgba(220,239,229,.55);
+ color:#286047;
+ font-size:14px;
+ font-weight:700
 }
 
 /* =========================
-   BEFORDRING 2026
+   TAX
 ========================= */
 
-/*
-  SKAT 2026:
-  0-24 km: 0
-  25-120 km: 3,17 kr./km
-  over 120 km: 1,59 kr./km
-  yderkommuner/særlige småøer: 3,51 kr./km
-*/
-function calculateTransportDeduction(){
-  var km=n(document.getElementById("transportKm").value);
-  var days=n(document.getElementById("transportDays").value);
-  var special=document.getElementById("transportSpecial").value==="yes";
+.tax{
+ padding:15px;
+ border-radius:17px;
 
-  var deductibleKm=Math.max(0,km-24);
-  var daily=0;
+ background:
+ radial-gradient(circle at 90% 10%,rgba(126,86,177,.13),transparent 30%),
+ rgba(247,245,252,.9);
 
-  if(special){
-    daily=deductibleKm*3.51;
-  }else{
-    var firstBand=Math.min(deductibleKm,96);
-    var secondBand=Math.max(0,deductibleKm-96);
-    daily=firstBand*3.17+secondBand*1.59;
-  }
+ border:1px solid rgba(112,81,159,.12)
+}
 
-  var annual=daily*days;
+.taxSec{
+ margin-bottom:22px
+}
 
-  /* Ekstra kørselsfradrag for lavere indkomst, 2026.
-     SKAT angiver op til 30.800 kr. ekstra.
-     For under 341.500 kr.: 64% af det normale fradrag,
-     herefter gradvis udfasning til 0 ved 391.500 kr.
-  */
-  var income=n(document.getElementById("annualIncome").value);
-  var extra=0;
+.taxSec:last-child{
+ margin-bottom:0
+}
 
-  if(annual>0 && income<391500){
-    if(income<=341500){
-      extra=Math.min(annual*0.64,30800);
-    }else{
-      var factor=(391500-income)/(391500-341500);
-      extra=Math.min(annual*0.64*factor,30800);
-    }
-  }
+.taxTitle{
+ margin-bottom:6px;
+ color:var(--p);
+ font-size:17px;
+ font-weight:800
+}
 
-  var total=annual+extra;
+.desc{
+ margin:0 0 12px;
+ color:#766e84;
+ font-size:13px;
+ line-height:1.45
+}
 
-  document.getElementById("transport").value=Math.round(total);
+.taxRow{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ padding:10px 11px;
+ margin-bottom:7px;
+ border-radius:13px;
+ background:rgba(255,255,255,.78);
+ border:1px solid rgba(112,81,159,.14)
+}
 
-  document.getElementById("transportCalculated").textContent=fmt(total)+" kr.";
+.taxLabel{
+ flex:1;
+ font-size:14px
+}
 
-  /* SKAT oplyser værdien til ca. 26%. */
-  var taxSaving=total*0.26;
+.taxRow input{
+ width:110px;
+ padding:7px;
+ border:none;
+ background:transparent;
+ text-align:right
+}
 
-  document.getElementById("transportTaxSaving").textContent=
-    "≈ "+fmt(taxSaving/12)+" kr./md.";
+.q{
+ width:34px;
+ height:34px;
+ min-width:34px;
+ display:grid;
+ place-items:center;
+ border-radius:50%;
+ background:var(--p);
+ color:#fff;
+ font-weight:800
+}
 
-  return total;
+.auto{
+ overflow:hidden;
+ margin-bottom:12px;
+ border-radius:14px;
+ background:rgba(255,255,255,.55);
+ border:1px solid rgba(112,81,159,.15)
+}
+
+.autoHead{
+ padding:12px 13px 5px;
+ font-size:14px;
+ font-weight:800
+}
+
+.autoRow{
+ display:flex;
+ justify-content:space-between;
+ gap:15px;
+ padding:9px 13px;
+ font-size:14px
+}
+
+.autoTotal{
+ border-top:1px solid rgba(112,81,159,.13);
+ font-weight:800;
+ color:var(--p)
 }
 
 /* =========================
-   SKAT / FRADRAG
+   LOANS
 ========================= */
 
-function updateTax(){
-  var income=n(document.getElementById("annualIncome").value);
+.loan{
+ padding:14px;
+ margin-bottom:9px;
+ border-radius:16px;
+ background:rgba(255,255,255,.84);
+ border:1px solid rgba(112,81,159,.16)
+}
 
-  var employment=Math.min(income*0.1275,63300);
-  var job=income>235200?Math.min((income-235200)*0.045,3100):0;
-  var automatic=employment+job;
+.loanTop{
+ display:flex;
+ align-items:center;
+ gap:8px;
+ margin-bottom:10px
+}
 
-  document.getElementById("employment").textContent=fmt(employment)+" kr.";
-  document.getElementById("job").textContent=fmt(job)+" kr.";
-  document.getElementById("autoTotal").textContent=fmt(automatic)+" kr.";
-  document.getElementById("autoSummary").textContent=fmt(automatic)+" kr.";
+.loanName{
+ flex:1!important;
+ border:none!important;
+ background:transparent!important;
+ font-size:16px!important;
+ font-weight:750!important;
+ box-shadow:none!important;
+ padding:6px!important
+}
 
-  var transport=calculateTransportDeduction();
+.loanType{
+ margin-bottom:9px
+}
 
-  var union=Math.min(n(document.getElementById("union").value),7000);
-  var akasse=n(document.getElementById("akasse").value);
-  var work=Math.max(0,n(document.getElementById("work").value)-7600);
+.loanFields{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px
+}
 
-  var ligning=transport+union+akasse+work;
+.loanCalc{
+ margin-top:10px;
+ padding:11px 12px;
+ border-radius:13px;
+ background:#f3eff9;
+ color:#625875
+}
 
-  document.getElementById("ligningTotal").textContent=fmt(ligning)+" kr.";
+.loanCalc .formula{
+ font-size:13px;
+ line-height:1.45
+}
 
-  /* Vejledende værdi af ligningsmæssige fradrag */
-  var ligningTaxSaving=ligning*0.26;
-  document.getElementById("ligningTaxSaving").textContent=
-    "≈ "+fmt(ligningTaxSaving/12)+" kr./md.";
+.loanCalc strong{
+ display:block;
+ color:var(--p);
+ font-size:17px;
+ margin-top:2px
+}
 
-  var interest=0;
-  loans.forEach(function(loan){
-    interest+=loanAnnualInterest(loan);
-  });
+.loanCalc .saving{
+ margin-top:8px;
+ padding-top:8px;
+ border-top:1px solid rgba(112,81,159,.12);
+ font-size:13px;
+ line-height:1.45
+}
 
-  var interestSaving=taxSavingForInterest(interest);
+.loanCalc .saving strong{
+ display:inline;
+ color:var(--p);
+ font-size:15px
+}
 
-  document.getElementById("interestTotal").textContent=fmt(interest)+" kr.";
-  document.getElementById("interestTaxSaving").textContent=fmt(interestSaving/12)+" kr.";
-  document.getElementById("loanCount").textContent=String(loans.length);
+.loanCalc .net{
+ margin-top:4px;
+ font-size:12px;
+ color:#756b83
+}
 
-  save();
+.loanDel{
+ width:42px;
+ min-height:42px;
+ border-radius:11px;
+ color:#fff;
+ background:#b84841;
+ font-size:19px
 }
 
 /* =========================
-   LÅN
+   TAX SUMMARY
 ========================= */
 
-function loanAnnualInterest(loan){
-  if(loan.balance===undefined && loan.rate===undefined){
-    return n(loan.manualInterest!==undefined?loan.manualInterest:loan.interest);
-  }
-
-  if(loan.manualInterest && n(loan.balance)===0 && n(loan.rate)===0){
-    return n(loan.manualInterest);
-  }
-
-  return n(loan.balance)*n(loan.rate)/100;
+.taxSummary{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px;
+ margin-top:12px;
+ padding:14px;
+ border-radius:15px;
+ background:rgba(255,255,255,.6);
+ border:1px solid rgba(112,81,159,.18)
 }
 
-/*
-  Vejledende skatteværdi af negativ nettokapitalindkomst.
-  Standardantagelse: enlig, ingen anden positiv nettokapitalindkomst.
-*/
-function taxSavingForInterest(amount){
-  amount=Math.max(0,n(amount));
-
-  var first=Math.min(amount,50000);
-  var rest=Math.max(amount-50000,0);
-
-  return first*0.3307 + rest*0.2507;
+.taxSummary small{
+ display:block;
+ margin-bottom:5px;
+ color:#766e84;
+ font-size:11px
 }
 
-function cumulativeLoanSaving(index){
-  var before=0;
-
-  for(var i=0;i<index;i++){
-    before+=loanAnnualInterest(loans[i]);
-  }
-
-  return taxSavingForInterest(
-    before+loanAnnualInterest(loans[index])
-  )-taxSavingForInterest(before);
+.taxSummary strong{
+ color:var(--p);
+ font-size:20px
 }
 
-function normalizeLoan(loan){
-  var out=Object.assign({},loan);
-
-  if(out.balance===undefined && out.rate===undefined){
-    out.manualInterest=n(out.interest);
-    out.balance=0;
-    out.rate=0;
-  }
-
-  if(out.name===undefined)out.name="Nyt lån";
-  if(out.type===undefined)out.type="bank";
-
-  return out;
+.note{
+ margin:12px 0 0;
+ color:#7d748c;
+ font-size:11px;
+ line-height:1.5
 }
 
-loans=loans.map(normalizeLoan);
-
-function renderLoans(){
-  var list=document.getElementById("loanList");
-  var out="";
-
-  loans.forEach(function(l,i){
-    var yearly=loanAnnualInterest(l);
-    var savingAnnual=cumulativeLoanSaving(i);
-
-    out+='<div class="loan" data-loan-index="'+i+'">';
-
-    out+='<div class="loanTop">';
-    out+='<input class="loanName" type="text" value="'+escapeHtml(l.name||"")+'" placeholder="Fx. Boliglån" oninput="editLoanName('+i+',this.value)">';
-    out+='<button type="button" class="q" onclick="showInfo(\'Hvad giver fradrag?\',\'Det er renteudgifterne – ikke restgælden eller dine afdrag – der kan have skattemæssig betydning. Appen viser renteudgiften og et vejledende estimat for skattebesparelsen.\')">?</button>';
-    out+='</div>';
-
-    out+='<select class="loanType" onchange="editLoanType('+i+',this.value)">';
-    out+='<option value="mortgage" '+(l.type==="mortgage"?"selected":"")+'>🏠 Boliglån / realkredit</option>';
-    out+='<option value="car" '+(l.type==="car"?"selected":"")+'>🚗 Billån / finansiering</option>';
-    out+='<option value="bank" '+(l.type==="bank"?"selected":"")+'>🏦 Banklån / anden gæld</option>';
-    out+='<option value="student" '+(l.type==="student"?"selected":"")+'>🎓 Studielån</option>';
-    out+='</select>';
-
-    out+='<div class="loanFields">';
-    out+='<input class="loanBalance" type="text" inputmode="decimal" value="'+(l.balance?fmtDecimal(l.balance):"")+'" placeholder="Restgæld, kr." oninput="editLoanBalance('+i+',this.value)">';
-    out+='<input class="loanRate" type="text" inputmode="decimal" value="'+(l.rate?fmtDecimal(l.rate):"")+'" placeholder="Rente, %" oninput="editLoanRate('+i+',this.value)">';
-    out+='</div>';
-
-    out+='<div class="loanCalc">';
-    if(l.balance>0 && l.rate>0){
-      out+='<div class="formula">'+fmt(l.balance)+' kr. × '+fmtDecimal(l.rate)+' %</div>';
-    }else{
-      out+='<div class="formula">Restgæld × rente %</div>';
-    }
-
-    out+='<strong class="loanAnnual">= '+fmt(yearly)+' kr. i renter / år</strong>';
-
-    if(yearly>0){
-      out+='<div class="saving">Vejledende skattebesparelse: <strong>≈ '+fmt(savingAnnual)+' kr. / år</strong><br>≈ <strong>'+fmt(savingAnnual/12)+' kr. / måned</strong></div>';
-      out+='<div class="net">Rente efter estimeret skattebesparelse: ≈ '+fmt(Math.max(0,yearly-savingAnnual))+' kr. / år</div>';
-    }else{
-      out+='<div class="saving">Udfyld restgæld og rente for at se den estimerede skattebesparelse.</div>';
-      out+='<div class="net"></div>';
-    }
-
-    out+='</div>';
-    out+='<div style="margin-top:8px;display:flex;justify-content:flex-end">';
-    out+='<button type="button" class="loanDel" onclick="removeLoan('+i+')">×</button>';
-    out+='</div>';
-    out+='</div>';
-  });
-
-  list.innerHTML=out;
-}
-
-function refreshLoanCard(i){
-  var card=document.querySelector('#loanList .loan[data-loan-index="'+i+'"]');
-  if(!card)return;
-
-  var l=loans[i];
-  var yearly=loanAnnualInterest(l);
-  var savingAnnual=cumulativeLoanSaving(i);
-
-  var formula=card.querySelector(".formula");
-  var annual=card.querySelector(".loanAnnual");
-  var saving=card.querySelector(".saving");
-  var net=card.querySelector(".net");
-
-  if(!formula||!annual||!saving||!net)return;
-
-  if(n(l.balance)>0&&n(l.rate)>0){
-    formula.textContent=fmt(l.balance)+" kr. × "+fmtDecimal(l.rate)+" %";
-  }else{
-    formula.textContent="Restgæld × rente %";
-  }
-
-  annual.textContent="= "+fmt(yearly)+" kr. i renter / år";
-
-  if(yearly>0){
-    saving.innerHTML='Vejledende skattebesparelse: <strong>≈ '+fmt(savingAnnual)+' kr. / år</strong><br>≈ <strong>'+fmt(savingAnnual/12)+' kr. / måned</strong>';
-    net.textContent='Rente efter estimeret skattebesparelse: ≈ '+fmt(Math.max(0,yearly-savingAnnual))+' kr. / år';
-  }else{
-    saving.textContent="Udfyld restgæld og rente for at se den estimerede skattebesparelse.";
-    net.textContent="";
-  }
-}
-
-function addLoan(){
-  loans.push({name:"Nyt lån",balance:0,rate:0,type:"bank"});
-  renderLoans();
-  updateTax();
-}
-
-function editLoanName(i,v){
-  loans[i].name=v;
-  save();
-}
-
-function editLoanBalance(i,v){
-  loans[i].balance=n(v);
-  delete loans[i].manualInterest;
-  refreshLoanCard(i);
-  updateTax();
-}
-
-function editLoanRate(i,v){
-  loans[i].rate=n(v);
-  delete loans[i].manualInterest;
-  refreshLoanCard(i);
-  updateTax();
-}
-
-function editLoanType(i,v){
-  loans[i].type=v;
-  save();
-}
-
-function removeLoan(i){
-  loans.splice(i,1);
-  renderLoans();
-  updateTax();
+#transportCalculated,
+#transportTaxSaving,
+#ligningTaxSaving,
+#interestTaxSaving{
+ color:#70519f;
+ font-weight:800
 }
 
 /* =========================
    INFO
 ========================= */
 
-function showInfo(title,text){
-  document.getElementById("modalTitle").textContent=title;
-  document.getElementById("modalText").textContent=text;
-  document.getElementById("modal").className="modal show";
+.info{
+ display:flex;
+ align-items:center;
+ gap:14px;
+ margin-top:13px;
+ padding:18px;
+ border-radius:20px;
+ background:var(--card);
+ border:1px solid var(--line);
+ box-shadow:var(--sh)
 }
+
+.infoI{
+ width:48px;
+ height:48px;
+ flex:none;
+ display:grid;
+ place-items:center;
+ border-radius:50%;
+ color:var(--g);
+ background:var(--gs);
+ font-size:22px
+}
+
+.info b{
+ display:block;
+ margin-bottom:4px
+}
+
+.info span{
+ color:var(--mut);
+ font-size:13px
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.foot{
+ max-width:760px;
+ margin:28px auto 0;
+ padding:0 8px;
+ text-align:center;
+ color:#8b9690;
+ font-size:10px;
+ line-height:1.55;
+ letter-spacing:.01em
+}
+
+.foot div:nth-child(2){
+ color:#6f7d76;
+ font-weight:700
+}
+
+.foot div:nth-child(3){
+ color:#9aa39e;
+ font-size:9px
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal{
+ position:fixed;
+ inset:0;
+ display:none;
+ align-items:flex-end;
+ justify-content:center;
+ padding:16px;
+ background:rgba(0,0,0,.42);
+ z-index:9999
+}
+
+.modal.show{
+ display:flex
+}
+
+.modalBox{
+ width:100%;
+ max-width:500px;
+ padding:24px;
+ border-radius:24px;
+ background:#fff;
+ box-shadow:0 25px 70px rgba(0,0,0,.28)
+}
+
+.modalBox h2{
+ margin:0 0 10px;
+ font-size:22px
+}
+
+.modalBox p{
+ margin:0;
+ color:var(--mut);
+ line-height:1.55
+}
+
+.close{
+ width:100%;
+ min-height:50px;
+ margin-top:20px;
+ border-radius:13px;
+ background:var(--g);
+ color:#fff;
+ font-weight:700
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+
+ .app{
+  padding-left:11px;
+  padding-right:11px
+ }
+
+ .logo{
+  min-height:94px;
+  padding:15px 18px;
+  border-radius:32px 32px 32px 14px
+ }
+
+ .logoImage{
+  width:60px;
+  height:60px;
+  border-radius:17px
+ }
+
+ .logo h1{
+  font-size:29px
+ }
+
+ .logo p{
+  font-size:13px
+ }
+
+ .hero{
+  min-height:210px;
+  padding:23px 20px;
+  border-radius:22px
+ }
+
+ .balance{
+  font-size:54px
+ }
+
+ .badge{
+  right:17px;
+  bottom:16px
+ }
+
+ .summary{
+  gap:7px
+ }
+
+ .sumCard{
+  flex-direction:column;
+  align-items:flex-start;
+  gap:6px;
+  padding:11px 9px
+ }
+
+ .ico{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  font-size:18px
+ }
+
+ .sumCard small{
+  font-size:10px
+ }
+
+ .sumCard strong{
+  font-size:14px
+ }
+
+ .month{
+  font-size:9px
+ }
+
+ .accHead{
+  min-height:74px;
+  padding:11px
+ }
+
+ .accIcon{
+  width:47px;
+  height:47px;
+  margin-right:11px;
+  border-radius:15px;
+  font-size:19px
+ }
+
+ .accTitle b{
+  font-size:17px
+ }
+
+ .accTitle span{
+  font-size:11px
+ }
+
+ .chev{
+  padding:8px
+ }
+
+ .accBody{
+  padding:0 10px 12px
+ }
+
+ .box,
+ .tax{
+  padding:11px
+ }
+
+ .row{
+  grid-template-columns:minmax(0,1fr) 90px 44px;
+  gap:6px
+ }
+
+ .row input{
+  padding:11px 8px;
+  font-size:14px
+ }
+
+ .taxRow{
+  padding:9px
+ }
+
+ .taxLabel{
+  font-size:13px
+ }
+
+ .taxRow input{
+  width:82px;
+  font-size:14px
+ }
+
+ .loanFields{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:8px
+ }
+
+ .loanFields input{
+  min-width:0;
+  font-size:14px
+ }
+
+ .loanType{
+  width:100%;
+  font-size:13px
+ }
+
+ .taxSummary{
+  gap:8px;
+  padding:11px
+ }
+
+ .taxSummary strong{
+  font-size:18px
+ }
+
+ .modal{
+  padding:10px
+ }
+
+ .modalBox{
+  padding:20px;
+  border-radius:22px
+ }
+
+ #transportKm,
+ #transportDays{
+  width:82px
+ }
+
+ #transportSpecial{
+  font-size:14px
+ }
+
+ .foot{
+  font-size:9px;
+  line-height:1.55;
+  padding:0 10px
+ }
+
+ .foot div:nth-child(2){
+  font-size:9px
+ }
+
+ .foot div:nth-child(3){
+  font-size:8.5px
+ }
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+
+<main class="app">
+
+<!-- LOGO -->
+<div class="logo">
+  <img src="icon.png" alt="Mit Budget logo" class="logoImage">
+
+  <div>
+    <h1>Mit Budget</h1>
+    <p>Dit personlige økonomiske overblik</p>
+  </div>
+</div>
+
+
+<!-- HERO -->
+<section class="hero">
+
+<div class="label">
+Til rådighed denne måned
+</div>
+
+<div class="balance" id="balance">
+0 <span>kr.</span>
+</div>
+
+<div class="sub">
+Efter udgifter og investering
+</div>
+
+<div class="badge neu" id="badge">
+− Balance
+</div>
+
+</section>
+
+
+<!-- SUMMARY -->
+<div class="summary">
+
+<div class="sumCard">
+<div class="ico ig">↗</div>
+<div>
+<small>Indkomst</small>
+<strong id="sumIncome">0 kr.</strong>
+<div class="month green">/ md.</div>
+</div>
+</div>
+
+<div class="sumCard">
+<div class="ico ir">↘</div>
+<div>
+<small>Udgifter</small>
+<strong id="sumExpense">0 kr.</strong>
+<div class="month red">/ md.</div>
+</div>
+</div>
+
+<div class="sumCard">
+<div class="ico ib">◈</div>
+<div>
+<small>Investering</small>
+<strong id="sumInvest">0 kr.</strong>
+<div class="month blue">/ md.</div>
+</div>
+</div>
+
+</div>
+
+
+<!-- INDTÆGTER -->
+<div class="acc">
+
+<button type="button"
+class="accHead accordion-toggle"
+onclick="toggleAcc(this)">
+
+<div class="accIcon ig">↗</div>
+
+<div class="accTitle">
+<b>Indtægter</b>
+<span>Se og redigér dine indtægter</span>
+</div>
+
+<div class="chev">⌄</div>
+
+</button>
+
+<div class="accBody">
+
+<div class="box">
+
+<h3>Mine indtægter</h3>
+
+<div id="incomeList"></div>
+
+<button
+type="button"
+class="add"
+onclick="addIncome()">
++ Tilføj ny indtægt
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- UDGIFTER -->
+<div class="acc">
+
+<button type="button"
+class="accHead accordion-toggle"
+onclick="toggleAcc(this)">
+
+<div class="accIcon ir">↘</div>
+
+<div class="accTitle">
+<b>Udgifter</b>
+<span>Se og redigér dine udgifter</span>
+</div>
+
+<div class="chev">⌄</div>
+
+</button>
+
+<div class="accBody">
+
+<div class="box">
+
+<h3>Mine udgifter</h3>
+
+<div id="expenseList"></div>
+
+<button
+type="button"
+class="add"
+onclick="addExpense()">
++ Tilføj ny udgift
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- INVESTERING -->
+<div class="acc">
+
+<button type="button"
+class="accHead accordion-toggle"
+onclick="toggleAcc(this)">
+
+<div class="accIcon ib">◈</div>
+
+<div class="accTitle">
+<b>Investering</b>
+<span>Fast investering pr. måned</span>
+</div>
+
+<div class="chev">⌄</div>
+
+</button>
+
+<div class="accBody">
+
+<div class="box">
+
+<h3>Fast månedlig investering</h3>
+
+<input
+id="investment"
+type="text"
+inputmode="decimal"
+placeholder="Fx. 1000 kr."
+oninput="updateBudget()">
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SKAT -->
+<div class="acc">
+
+<button type="button"
+class="accHead accordion-toggle"
+onclick="toggleAcc(this)">
+
+<div class="accIcon ip">%</div>
+
+<div class="accTitle">
+<b style="color:#70519f">Skat & fradrag</b>
+<span style="color:#8067a5">
+Se hvad dine fradrag betyder for skatten
+</span>
+</div>
+
+<div class="chev">⌄</div>
+
+</button>
+
+
+<div class="accBody">
+
+<div class="tax">
+
+
+<!-- ARBEJDSINDKOMST -->
+<div class="taxSec">
+
+<div class="taxTitle">
+Arbejdsindkomst & automatiske fradrag
+</div>
+
+<p class="desc">
+Beskæftigelses- og jobfradrag beregnes automatisk ud fra din arbejdsindkomst.
+</p>
+
+<div class="taxRow">
+
+<div class="taxLabel">
+Årlig arbejdsindkomst før skat
+</div>
+
+<input
+id="annualIncome"
+type="text"
+inputmode="decimal"
+placeholder="0"
+oninput="updateTax()">
+
+<button
+class="q"
+type="button"
+onclick="showInfo(
+'Årlig arbejdsindkomst',
+'Indtast din forventede AM-bidragspligtige arbejdsindkomst før skat. SU skal normalt ikke indgå som arbejdsindkomst i denne beregning.'
+)">
+?
+</button>
+
+</div>
+
+
+<div class="auto">
+
+<div class="autoHead">
+Automatiske fradrag – 2026
+</div>
+
+<div class="autoRow">
+<span>Beskæftigelsesfradrag</span>
+<span id="employment">0 kr.</span>
+</div>
+
+<div class="autoRow">
+<span>Jobfradrag</span>
+<span id="job">0 kr.</span>
+</div>
+
+<div class="autoRow autoTotal">
+<span>Automatiske fradrag i alt</span>
+<span id="autoTotal">0 kr.</span>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- LIGNING -->
+<div class="taxSec">
+
+<div class="taxTitle">
+Ligningsmæssige fradrag
+</div>
+
+<p class="desc">
+Indtast det årlige fradragsbeløb.
+</p>
+
+
+<div class="auto" style="padding:12px;margin-bottom:10px">
+
+<div class="autoHead" style="padding:2px 0 9px">
+Befordring – beregn automatisk
+</div>
+
+
+<div class="taxRow">
+
+<div class="taxLabel">
+Km tur/retur pr. arbejdsdag
+</div>
+
+<input
+id="transportKm"
+type="text"
+inputmode="decimal"
+placeholder="Fx. 48"
+oninput="updateTax()">
+
+<button
+class="q"
+type="button"
+onclick="showInfo(
+'Befordringsfradrag',
+'SKAT beregner ud fra den reelle kørselsafstand pr. dag. De første 24 km pr. dag giver ikke fradrag.'
+)">
+?
+</button>
+
+</div>
+
+
+<div class="taxRow">
+
+<div class="taxLabel">
+Arbejdsdage med transport / år
+</div>
+
+<input
+id="transportDays"
+type="text"
+inputmode="decimal"
+placeholder="Fx. 45"
+oninput="updateTax()">
+
+</div>
+
+
+<div class="taxRow">
+
+<div class="taxLabel">
+Yderkommune / relevant lille ø
+</div>
+
+<select
+id="transportSpecial"
+onchange="updateTax()">
+
+<option value="no">Nej</option>
+<option value="yes">Ja</option>
+
+</select>
+
+</div>
+
+
+<div class="autoRow autoTotal">
+<span>Beregnet befordringsfradrag</span>
+<span id="transportCalculated">0 kr.</span>
+</div>
+
+<div class="autoRow">
+<span>Vejledende skattebesparelse</span>
+<span id="transportTaxSaving">0 kr./md.</span>
+</div>
+
+</div>
+
+
+<input id="transport" type="hidden" value="0">
+
+
+<div class="taxRow">
+
+<div class="taxLabel">
+Fagforening
+</div>
+
+<input
+id="union"
+type="text"
+inputmode="decimal"
+placeholder="0"
+oninput="updateTax()">
+
+<button
+class="q"
+type="button"
+onclick="showInfo(
+'Fagforening',
+'I 2026 er det maksimale fradrag for fagforeningskontingent 7.000 kr. årligt.'
+)">
+?
+</button>
+
+</div>
+
+
+<div class="taxRow">
+
+<div class="taxLabel">
+A-kasse / efterløn / fleksydelse
+</div>
+
+<input
+id="akasse"
+type="text"
+inputmode="decimal"
+placeholder="0"
+oninput="updateTax()">
+
+<button
+class="q"
+type="button"
+onclick="showInfo(
+'A-kasse',
+'Kontingent til A-kasse samt relevante bidrag kan være fradragsberettiget.'
+)">
+?
+</button>
+
+</div>
+
+
+<div class="taxRow">
+
+<div class="taxLabel">
+Øvrige lønmodtagerudgifter
+</div>
+
+<input
+id="work"
+type="text"
+inputmode="decimal"
+placeholder="0"
+oninput="updateTax()">
+
+<button
+class="q"
+type="button"
+onclick="showInfo(
+'Øvrige lønmodtagerudgifter',
+'Visse nødvendige arbejdsudgifter kan give fradrag.'
+)">
+?
+</button>
+
+</div>
+
+
+<div class="auto">
+
+<div class="autoHead">
+Ligningsmæssige fradrag
+</div>
+
+<div class="autoRow">
+<span>Samlet fradragsberettiget beløb</span>
+<span id="ligningTotal">0 kr.</span>
+</div>
+
+<div class="autoRow autoTotal">
+<span>Vejledende skattebesparelse / md.</span>
+<span id="ligningTaxSaving">0 kr.</span>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- LÅN -->
+<div class="taxSec">
+
+<div class="taxTitle">
+Mine lån & gæld
+</div>
+
+<p class="desc">
+Indtast restgæld og årlig rente. Appen viser renteudgiften og et vejledende estimat for skattebesparelsen.
+</p>
+
+<div id="loanList"></div>
+
+<button
+type="button"
+class="add"
+onclick="addLoan()">
++ Tilføj lån eller gæld
+</button>
+
+</div>
+
+
+<div class="taxSummary">
+
+<div>
+<small>Automatiske fradrag</small>
+<strong id="autoSummary">0 kr.</strong>
+</div>
+
+<div>
+<small>Ligningsmæssige fradrag</small>
+<strong id="ligningSummary">0 kr.</strong>
+</div>
+
+</div>
+
+
+<div class="taxSummary">
+
+<div>
+<small>Renteudgifter / år</small>
+<strong id="interestTotal">0 kr.</strong>
+</div>
+
+<div>
+<small>Skattebesparelse / md.*</small>
+<strong id="interestTaxSaving">0 kr.</strong>
+</div>
+
+</div>
+
+
+<p class="note">
+* Skattebesparelsen på renter er et vejledende estimat.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- INFO -->
+<div class="info">
+
+<div class="infoI">i</div>
+
+<div>
+<b>Hjælp til fradrag</b>
+<span>Tryk på ? ved de enkelte poster for en enkel forklaring.</span>
+</div>
+
+</div>
+
+
+<!-- FOOTER -->
+<div class="foot">
+
+<div>
+Tal og skattesatser er baseret på offentligt tilgængelige oplysninger fra
+Skattestyrelsen og Skatteministeriet for 2026.
+</div>
+
+<div style="margin-top:8px;">
+© 2026 Mads Mortensen · Mit Budget · Alle rettigheder forbeholdes.
+</div>
+
+<div style="margin-top:3px;">
+Design, tekst, struktur og kode er udviklet til Mit Budget.
+</div>
+
+</div>
+
+</main>
+
+
+<!-- MODAL -->
+<div
+id="modal"
+class="modal"
+onclick="modalBackground(event)">
+
+<div class="modalBox">
+
+<h2 id="modalTitle"></h2>
+
+<p id="modalText"></p>
+
+<button
+type="button"
+class="close"
+onclick="closeInfo()">
+Luk
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   DEFAULT DATA
+========================= */
+
+var DEFAULT_INCOMES=[
+ {name:"SU",amount:6500},
+ {name:"Bararbejde",amount:0}
+];
+
+var DEFAULT_EXPENSES=[
+ {name:"Husleje",amount:2900},
+ {name:"Spotify",amount:89},
+ {name:"Disney+",amount:60},
+ {name:"PureGym",amount:230},
+ {name:"Transport",amount:90},
+ {name:"Mad",amount:2400}
+];
+
+var incomes=loadJson("mb_final_incomes",DEFAULT_INCOMES);
+var expenses=loadJson("mb_final_expenses",DEFAULT_EXPENSES);
+var loans=loadJson("mb_final_loans",[]);
+
+
+/* =========================
+   STORAGE
+========================= */
+
+function loadJson(key,fallback){
+ try{
+  var raw=localStorage.getItem(key);
+  return raw
+   ? JSON.parse(raw)
+   : JSON.parse(JSON.stringify(fallback));
+ }catch(e){
+  return JSON.parse(JSON.stringify(fallback));
+ }
+}
+
+function save(){
+
+ try{
+
+  localStorage.setItem(
+   "mb_final_incomes",
+   JSON.stringify(incomes)
+  );
+
+  localStorage.setItem(
+   "mb_final_expenses",
+   JSON.stringify(expenses)
+  );
+
+  localStorage.setItem(
+   "mb_final_loans",
+   JSON.stringify(loans)
+  );
+
+  [
+   "investment",
+   "annualIncome",
+   "transport",
+   "transportKm",
+   "transportDays",
+   "union",
+   "akasse",
+   "work"
+  ].forEach(function(id){
+
+   var el=document.getElementById(id);
+
+   if(el){
+    localStorage.setItem(
+     "mb_final_"+id,
+     el.value
+    );
+   }
+
+  });
+
+  var special=document.getElementById("transportSpecial");
+
+  if(special){
+   localStorage.setItem(
+    "mb_final_transportSpecial",
+    special.value
+   );
+  }
+
+ }catch(e){}
+
+}
+
+
+function loadFields(){
+
+ [
+  "investment",
+  "annualIncome",
+  "transport",
+  "transportKm",
+  "transportDays",
+  "union",
+  "akasse",
+  "work"
+ ].forEach(function(id){
+
+  try{
+
+   var value=localStorage.getItem("mb_final_"+id);
+
+   if(
+    value!==null &&
+    document.getElementById(id)
+   ){
+    document.getElementById(id).value=value;
+   }
+
+  }catch(e){}
+
+ });
+
+
+ try{
+
+  var special=localStorage.getItem(
+   "mb_final_transportSpecial"
+  );
+
+  if(
+   special!==null &&
+   document.getElementById("transportSpecial")
+  ){
+   document.getElementById("transportSpecial").value=special;
+  }
+
+ }catch(e){}
+
+}
+
+
+/* =========================
+   HELPERS
+========================= */
+
+function n(v){
+
+ if(typeof v==="number"){
+  return isFinite(v)?v:0;
+ }
+
+ var s=String(v==null?"":v)
+ .trim()
+ .replace(/\s/g,"");
+
+ if(!s)return 0;
+
+ if(
+  s.indexOf(",")!==-1 &&
+  s.indexOf(".")!==-1
+ ){
+
+  if(
+   s.lastIndexOf(",")>
+   s.lastIndexOf(".")
+  ){
+   s=s.replace(/\./g,"").replace(",",".");
+  }else{
+   s=s.replace(/,/g,"");
+  }
+
+ }else if(s.indexOf(",")!==-1){
+
+  s=s.replace(",",".");
+
+ }
+
+ var x=parseFloat(s);
+
+ return isFinite(x)?x:0;
+
+}
+
+
+function fmt(v){
+ return Math.round(n(v))
+ .toLocaleString("da-DK");
+}
+
+
+function fmtDecimal(v){
+ return n(v).toLocaleString(
+  "da-DK",
+  {
+   minimumFractionDigits:0,
+   maximumFractionDigits:2
+  }
+ );
+}
+
+
+function escapeHtml(v){
+
+ return String(v)
+ .replace(/&/g,"&amp;")
+ .replace(/"/g,"&quot;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;");
+
+}
+
+
+/* =========================
+   ACCORDION
+========================= */
+
+function toggleAcc(button){
+
+ var acc=button.closest(".acc");
+
+ if(acc){
+  acc.classList.toggle("open");
+ }
+
+}
+
+
+/* =========================
+   INCOME
+========================= */
+
+function renderIncomes(){
+
+ var list=document.getElementById("incomeList");
+ var out="";
+
+ incomes.forEach(function(item,i){
+
+  out+='<div class="row">';
+
+  out+='<input type="text" value="'+
+  escapeHtml(item.name)+
+  '" placeholder="Navn" oninput="editIncomeName('+
+  i+',this.value)">';
+
+  out+='<input type="text" inputmode="decimal" value="'+
+  fmtDecimal(item.amount)+
+  '" placeholder="Beløb" oninput="editIncomeAmount('+
+  i+',this.value)">';
+
+  out+='<button type="button" class="del" onclick="removeIncome('+
+  i+')">×</button>';
+
+  out+='</div>';
+
+ });
+
+ list.innerHTML=out;
+
+}
+
+
+function addIncome(){
+
+ incomes.push({
+  name:"Ny indtægt",
+  amount:0
+ });
+
+ renderIncomes();
+ updateBudget();
+
+}
+
+
+function editIncomeName(i,v){
+
+ incomes[i].name=v;
+ save();
+
+}
+
+
+function editIncomeAmount(i,v){
+
+ incomes[i].amount=n(v);
+ updateBudget();
+
+}
+
+
+function removeIncome(i){
+
+ incomes.splice(i,1);
+
+ renderIncomes();
+ updateBudget();
+
+}
+
+
+/* =========================
+   EXPENSES
+========================= */
+
+function renderExpenses(){
+
+ var list=document.getElementById("expenseList");
+ var out="";
+
+ expenses.forEach(function(item,i){
+
+  out+='<div class="row">';
+
+  out+='<input type="text" value="'+
+  escapeHtml(item.name)+
+  '" placeholder="Navn" oninput="editExpenseName('+
+  i+',this.value)">';
+
+  out+='<input type="text" inputmode="decimal" value="'+
+  fmtDecimal(item.amount)+
+  '" placeholder="Beløb" oninput="editExpenseAmount('+
+  i+',this.value)">';
+
+  out+='<button type="button" class="del" onclick="removeExpense('+
+  i+')">×</button>';
+
+  out+='</div>';
+
+ });
+
+ list.innerHTML=out;
+
+}
+
+
+function addExpense(){
+
+ expenses.push({
+  name:"Ny udgift",
+  amount:0
+ });
+
+ renderExpenses();
+ updateBudget();
+
+}
+
+
+function editExpenseName(i,v){
+
+ expenses[i].name=v;
+ save();
+
+}
+
+
+function editExpenseAmount(i,v){
+
+ expenses[i].amount=n(v);
+ updateBudget();
+
+}
+
+
+function removeExpense(i){
+
+ expenses.splice(i,1);
+
+ renderExpenses();
+ updateBudget();
+
+}
+
+
+/* =========================
+   BUDGET
+========================= */
+
+function updateBudget(){
+
+ var income=incomes.reduce(
+  function(s,i){
+   return s+n(i.amount)
+  },
+  0
+ );
+
+ var expense=expenses.reduce(
+  function(s,i){
+   return s+n(i.amount)
+  },
+  0
+ );
+
+ var invest=n(
+  document.getElementById("investment").value
+ );
+
+ var balance=income-expense-invest;
+
+
+ document.getElementById(
+  "sumIncome"
+ ).textContent=fmt(income)+" kr.";
+
+ document.getElementById(
+  "sumExpense"
+ ).textContent=fmt(expense)+" kr.";
+
+ document.getElementById(
+  "sumInvest"
+ ).textContent=fmt(invest)+" kr.";
+
+ document.getElementById(
+  "balance"
+ ).innerHTML=
+ fmt(balance)+' <span>kr.</span>';
+
+
+ var badge=document.getElementById("badge");
+
+ badge.className="badge";
+
+
+ if(balance>0){
+
+  badge.classList.add("pos");
+  badge.textContent="↗ Positiv økonomi";
+
+ }else if(balance<0){
+
+  badge.classList.add("neg");
+  badge.textContent="↘ Negativ økonomi";
+
+ }else{
+
+  badge.classList.add("neu");
+  badge.textContent="− Balance";
+
+ }
+
+ save();
+
+}
+
+
+/* =========================
+   TRANSPORT
+========================= */
+
+function calculateTransportDeduction(){
+
+ var km=n(
+  document.getElementById("transportKm").value
+ );
+
+ var days=n(
+  document.getElementById("transportDays").value
+ );
+
+ var special=
+ document.getElementById(
+  "transportSpecial"
+ ).value==="yes";
+
+
+ var deductibleKm=Math.max(
+  0,
+  km-24
+ );
+
+ var daily=0;
+
+
+ if(special){
+
+  daily=deductibleKm*3.51;
+
+ }else{
+
+  var firstBand=Math.min(
+   deductibleKm,
+   96
+  );
+
+  var secondBand=Math.max(
+   0,
+   deductibleKm-96
+  );
+
+  daily=
+   firstBand*3.17+
+   secondBand*1.59;
+
+ }
+
+
+ var annual=daily*days;
+
+
+ var income=n(
+  document.getElementById(
+   "annualIncome"
+  ).value
+ );
+
+ var extra=0;
+
+
+ if(
+  annual>0 &&
+  income<391500
+ ){
+
+  if(income<=341500){
+
+   extra=Math.min(
+    annual*.64,
+    30800
+   );
+
+  }else{
+
+   var factor=
+   (391500-income)/
+   (391500-341500);
+
+   extra=Math.min(
+    annual*.64*factor,
+    30800
+   );
+
+  }
+
+ }
+
+
+ var total=annual+extra;
+
+
+ document.getElementById(
+  "transport"
+ ).value=Math.round(total);
+
+
+ document.getElementById(
+  "transportCalculated"
+ ).textContent=fmt(total)+" kr.";
+
+
+ var taxSaving=total*.26;
+
+
+ document.getElementById(
+  "transportTaxSaving"
+ ).textContent=
+ "≈ "+fmt(taxSaving/12)+" kr./md.";
+
+
+ return total;
+
+}
+
+
+/* =========================
+   TAX
+========================= */
+
+function updateTax(){
+
+ var income=n(
+  document.getElementById(
+   "annualIncome"
+  ).value
+ );
+
+
+ var employment=Math.min(
+  income*.1275,
+  63300
+ );
+
+
+ var job=
+ income>235200
+ ? Math.min(
+   (income-235200)*.045,
+   3100
+  )
+ : 0;
+
+
+ var automatic=
+ employment+job;
+
+
+ document.getElementById(
+  "employment"
+ ).textContent=
+ fmt(employment)+" kr.";
+
+
+ document.getElementById(
+  "job"
+ ).textContent=
+ fmt(job)+" kr.";
+
+
+ document.getElementById(
+  "autoTotal"
+ ).textContent=
+ fmt(automatic)+" kr.";
+
+
+ document.getElementById(
+  "autoSummary"
+ ).textContent=
+ fmt(automatic)+" kr.";
+
+
+ var transport=
+ calculateTransportDeduction();
+
+
+ var union=Math.min(
+  n(
+   document.getElementById("union").value
+  ),
+  7000
+ );
+
+
+ var akasse=n(
+  document.getElementById("akasse").value
+ );
+
+
+ var work=Math.max(
+  0,
+  n(
+   document.getElementById("work").value
+  )-7600
+ );
+
+
+ var ligning=
+ transport+
+ union+
+ akasse+
+ work;
+
+
+ document.getElementById(
+  "ligningTotal"
+ ).textContent=
+ fmt(ligning)+" kr.";
+
+
+ document.getElementById(
+  "ligningSummary"
+ ).textContent=
+ fmt(ligning)+" kr.";
+
+
+ var ligningTaxSaving=
+ ligning*.26;
+
+
+ document.getElementById(
+  "ligningTaxSaving"
+ ).textContent=
+ "≈ "+
+ fmt(ligningTaxSaving/12)+
+ " kr./md.";
+
+
+ var interest=0;
+
+
+ loans.forEach(function(loan){
+
+  interest+=
+  loanAnnualInterest(loan);
+
+ });
+
+
+ var interestSaving=
+ taxSavingForInterest(interest);
+
+
+ document.getElementById(
+  "interestTotal"
+ ).textContent=
+ fmt(interest)+" kr.";
+
+
+ document.getElementById(
+  "interestTaxSaving"
+ ).textContent=
+ fmt(interestSaving/12)+" kr.";
+
+
+ save();
+
+}
+
+
+/* =========================
+   LOANS
+========================= */
+
+function loanAnnualInterest(loan){
+
+ if(
+  loan.balance===undefined &&
+  loan.rate===undefined
+ ){
+
+  return n(
+   loan.manualInterest!==undefined
+   ? loan.manualInterest
+   : loan.interest
+  );
+
+ }
+
+
+ if(
+  loan.manualInterest &&
+  n(loan.balance)===0 &&
+  n(loan.rate)===0
+ ){
+
+  return n(
+   loan.manualInterest
+  );
+
+ }
+
+
+ return
+ n(loan.balance)*
+ n(loan.rate)/100;
+
+}
+
+
+function taxSavingForInterest(amount){
+
+ amount=Math.max(
+  0,
+  n(amount)
+ );
+
+
+ var first=Math.min(
+  amount,
+  50000
+ );
+
+
+ var rest=Math.max(
+  amount-50000,
+  0
+ );
+
+
+ return
+ first*.3307+
+ rest*.2507;
+
+}
+
+
+function cumulativeLoanSaving(index){
+
+ var before=0;
+
+
+ for(
+  var i=0;
+  i<index;
+  i++
+ ){
+
+  before+=
+  loanAnnualInterest(
+   loans[i]
+  );
+
+ }
+
+
+ return
+ taxSavingForInterest(
+  before+
+  loanAnnualInterest(
+   loans[index]
+  )
+ )
+ -
+ taxSavingForInterest(
+  before
+ );
+
+}
+
+
+function normalizeLoan(loan){
+
+ var out=Object.assign(
+  {},
+  loan
+ );
+
+
+ if(
+  out.balance===undefined &&
+  out.rate===undefined
+ ){
+
+  out.manualInterest=
+  n(out.interest);
+
+  out.balance=0;
+  out.rate=0;
+
+ }
+
+
+ if(out.name===undefined){
+  out.name="Nyt lån";
+ }
+
+
+ if(out.type===undefined){
+  out.type="bank";
+ }
+
+
+ return out;
+
+}
+
+
+loans=loans.map(normalizeLoan);
+
+
+function renderLoans(){
+
+ var list=document.getElementById("loanList");
+ var out="";
+
+
+ loans.forEach(function(l,i){
+
+  var yearly=
+  loanAnnualInterest(l);
+
+
+  var savingAnnual=
+  cumulativeLoanSaving(i);
+
+
+  out+='<div class="loan" data-loan-index="'+i+'">';
+
+
+  out+='<div class="loanTop">';
+
+
+  out+='<input class="loanName" type="text" value="'+
+  escapeHtml(l.name||"")+
+  '" placeholder="Fx. Boliglån" oninput="editLoanName('+
+  i+',this.value)">';
+
+
+  out+='<button type="button" class="q" onclick="showInfo('+
+  '\'Hvad giver fradrag?\','+
+  '\'Det er renteudgifterne – ikke restgælden eller dine afdrag – der kan have skattemæssig betydning.\''+
+  ')">?</button>';
+
+
+  out+='</div>';
+
+
+  out+='<select class="loanType" onchange="editLoanType('+
+  i+',this.value)">';
+
+
+  out+='<option value="mortgage" '+
+  (l.type==="mortgage"?"selected":"")+
+  '>🏠 Boliglån / realkredit</option>';
+
+
+  out+='<option value="car" '+
+  (l.type==="car"?"selected":"")+
+  '>🚗 Billån / finansiering</option>';
+
+
+  out+='<option value="bank" '+
+  (l.type==="bank"?"selected":"")+
+  '>🏦 Banklån / anden gæld</option>';
+
+
+  out+='<option value="student" '+
+  (l.type==="student"?"selected":"")+
+  '>🎓 Studielån</option>';
+
+
+  out+='</select>';
+
+
+  out+='<div class="loanFields">';
+
+
+  out+='<input class="loanBalance" type="text" inputmode="decimal" value="'+
+  (l.balance?fmtDecimal(l.balance):"")+
+  '" placeholder="Restgæld, kr." oninput="editLoanBalance('+
+  i+',this.value)">';
+
+
+  out+='<input class="loanRate" type="text" inputmode="decimal" value="'+
+  (l.rate?fmtDecimal(l.rate):"")+
+  '" placeholder="Rente, %" oninput="editLoanRate('+
+  i+',this.value)">';
+
+
+  out+='</div>';
+
+
+  out+='<div class="loanCalc">';
+
+
+  if(
+   l.balance>0 &&
+   l.rate>0
+  ){
+
+   out+='<div class="formula">'+
+   fmt(l.balance)+
+   ' kr. × '+
+   fmtDecimal(l.rate)+
+   ' %</div>';
+
+  }else{
+
+   out+='<div class="formula">Restgæld × rente %</div>';
+
+  }
+
+
+  out+='<strong class="loanAnnual">= '+
+  fmt(yearly)+
+  ' kr. i renter / år</strong>';
+
+
+  if(yearly>0){
+
+   out+='<div class="saving">Vejledende skattebesparelse: <strong>≈ '+
+   fmt(savingAnnual)+
+   ' kr. / år</strong><br>≈ <strong>'+
+   fmt(savingAnnual/12)+
+   ' kr. / måned</strong></div>';
+
+
+   out+='<div class="net">Rente efter estimeret skattebesparelse: ≈ '+
+   fmt(
+    Math.max(
+     0,
+     yearly-savingAnnual
+    )
+   )+
+   ' kr. / år</div>';
+
+  }else{
+
+   out+='<div class="saving">Udfyld restgæld og rente for at se den estimerede skattebesparelse.</div>';
+
+   out+='<div class="net"></div>';
+
+  }
+
+
+  out+='</div>';
+
+
+  out+='<div style="margin-top:8px;display:flex;justify-content:flex-end">';
+
+  out+='<button type="button" class="loanDel" onclick="removeLoan('+
+  i+')">×</button>';
+
+  out+='</div>';
+
+  out+='</div>';
+
+ });
+
+
+ list.innerHTML=out;
+
+}
+
+
+function refreshLoanCard(i){
+
+ var card=document.querySelector(
+ '#loanList .loan[data-loan-index="'+i+'"]'
+ );
+
+
+ if(!card)return;
+
+
+ var l=loans[i];
+
+
+ var yearly=
+ loanAnnualInterest(l);
+
+
+ var savingAnnual=
+ cumulativeLoanSaving(i);
+
+
+ var formula=
+ card.querySelector(".formula");
+
+
+ var annual=
+ card.querySelector(".loanAnnual");
+
+
+ var saving=
+ card.querySelector(".saving");
+
+
+ var net=
+ card.querySelector(".net");
+
+
+ if(
+  !formula||
+  !annual||
+  !saving||
+  !net
+ )return;
+
+
+ if(
+  n(l.balance)>0 &&
+  n(l.rate)>0
+ ){
+
+  formula.textContent=
+  fmt(l.balance)+
+  " kr. × "+
+  fmtDecimal(l.rate)+
+  " %";
+
+ }else{
+
+  formula.textContent=
+  "Restgæld × rente %";
+
+ }
+
+
+ annual.textContent=
+ "= "+
+ fmt(yearly)+
+ " kr. i renter / år";
+
+
+ if(yearly>0){
+
+  saving.innerHTML=
+  'Vejledende skattebesparelse: <strong>≈ '+
+  fmt(savingAnnual)+
+  ' kr. / år</strong><br>≈ <strong>'+
+  fmt(savingAnnual/12)+
+  ' kr. / måned</strong>';
+
+
+  net.textContent=
+  'Rente efter estimeret skattebesparelse: ≈ '+
+  fmt(
+   Math.max(
+    0,
+    yearly-savingAnnual
+   )
+  )+
+  ' kr. / år';
+
+ }else{
+
+  saving.textContent=
+  "Udfyld restgæld og rente for at se den estimerede skattebesparelse.";
+
+  net.textContent="";
+
+ }
+
+}
+
+
+function addLoan(){
+
+ loans.push({
+  name:"Nyt lån",
+  balance:0,
+  rate:0,
+  type:"bank"
+ });
+
+ renderLoans();
+ updateTax();
+
+}
+
+
+function editLoanName(i,v){
+
+ loans[i].name=v;
+ save();
+
+}
+
+
+function editLoanBalance(i,v){
+
+ loans[i].balance=n(v);
+
+ delete loans[i].manualInterest;
+
+ refreshLoanCard(i);
+
+ updateTax();
+
+}
+
+
+function editLoanRate(i,v){
+
+ loans[i].rate=n(v);
+
+ delete loans[i].manualInterest;
+
+ refreshLoanCard(i);
+
+ updateTax();
+
+}
+
+
+function editLoanType(i,v){
+
+ loans[i].type=v;
+ save();
+
+}
+
+
+function removeLoan(i){
+
+ loans.splice(i,1);
+
+ renderLoans();
+
+ updateTax();
+
+}
+
+
+/* =========================
+   INFO MODAL
+========================= */
+
+function showInfo(title,text){
+
+ document.getElementById(
+  "modalTitle"
+ ).textContent=title;
+
+
+ document.getElementById(
+  "modalText"
+ ).textContent=text;
+
+
+ document.getElementById(
+  "modal"
+ ).className="modal show";
+
+}
+
 
 function closeInfo(){
-  document.getElementById("modal").className="modal";
+
+ document.getElementById(
+  "modal"
+ ).className="modal";
+
 }
 
+
 function modalBackground(e){
-  if(e.target===e.currentTarget)closeInfo();
+
+ if(e.target===e.currentTarget){
+  closeInfo();
+ }
+
 }
+
 
 /* =========================
    START
 ========================= */
 
 loadFields();
+
 renderIncomes();
+
 renderExpenses();
+
 renderLoans();
+
 updateBudget();
+
 updateTax();
+
 </script>
+
 </body>
 </html>
