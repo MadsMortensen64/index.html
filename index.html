@@ -427,6 +427,47 @@ select:focus{
  font-weight:700
 }
 
+
+/* =========================
+   DAGENS FORBRUG
+========================= */
+.dailyCard{margin-bottom:10px;border-radius:21px;background:var(--card);border:1px solid var(--line);box-shadow:var(--sh);overflow:hidden}
+.dailyHead{width:100%;min-height:80px;display:flex;align-items:center;padding:15px;background:transparent;color:var(--txt);text-align:left}
+.dailyIcon{width:52px;height:52px;flex:none;display:grid;place-items:center;margin-right:14px;border-radius:17px;background:var(--gs);color:var(--g)}
+.dailyIcon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dailyTitle{flex:1}.dailyTitle b{display:block;font-size:19px}.dailyTitle span{display:block;margin-top:3px;color:var(--mut);font-size:13px}
+.dailyChevron{padding:10px;color:#748079;transition:transform .32s cubic-bezier(.22,1,.36,1)}.dailyCard.open .dailyChevron{transform:rotate(180deg)}
+.dailyBody{display:grid;grid-template-rows:0fr;opacity:0;transform:translateY(-4px);transition:grid-template-rows .38s cubic-bezier(.22,1,.36,1),opacity .24s ease,transform .38s cubic-bezier(.22,1,.36,1)}
+.dailyCard.open .dailyBody{grid-template-rows:1fr;opacity:1;transform:none}
+.dailyBodyInner{min-height:0;overflow:hidden;padding:0 15px}.dailyBox{padding:15px;border-radius:16px;background:rgba(245,248,246,.85);border:1px solid rgba(0,0,0,.05)}
+.dailyStats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}.dailyStat{padding:11px 12px;border-radius:14px;background:#fff;border:1px solid #e2e8e3}
+.dailyStat small{display:block;color:var(--mut);font-size:11px;margin-bottom:3px}.dailyStat strong{font-size:17px}
+.dailyAddTitle{margin:0 0 10px;font-size:16px}.dailyForm{display:grid;grid-template-columns:1fr 120px;gap:8px}.dailyForm .dailyName{grid-column:1/-1}
+.dailyForm input,.dailyForm select{min-height:44px;font-size:15px}.dailyDate{grid-column:1/-1}
+.dailyAdd{width:100%;min-height:48px;margin-top:8px;border:1px dashed #85a897;border-radius:12px;background:rgba(220,239,229,.55);color:#286047;font-size:14px;font-weight:700}
+.dailyHint{margin:8px 1px 0;color:#7d8981;font-size:11px;line-height:1.45}
+.dailyDay{margin-top:15px}.dailyDayHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;color:#5d6962;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.45px}
+.dailyDayTotal{color:#7d8981;font-weight:700;text-transform:none;letter-spacing:0}
+.dailyEntry{display:grid;grid-template-columns:1fr auto 38px;gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #e8ede9}.dailyEntry:last-child{border-bottom:0}
+.dailyEntryName{font-size:14px;font-weight:700}.dailyEntrySub{margin-top:3px;color:#829087;font-size:11px}.dailyEntryAmount{font-size:14px;font-weight:800;white-space:nowrap}
+.dailyDelete{width:38px;min-height:38px;display:grid;place-items:center;border-radius:11px;background:#fae6e4;color:#a23b35;font-size:19px}
+.dailyDivider{height:1px;margin:16px 0;background:#e1e7e3}.dailySubHead{margin:0 0 9px;font-size:15px;font-weight:800}
+.dailyHistoryToggle{width:100%;min-height:46px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;border:1px solid #dce4df;border-radius:12px;background:#fff;color:var(--txt);font-size:14px;font-weight:750}
+.historyChevron{transition:transform .28s cubic-bezier(.22,1,.36,1)}.dailyHistory.open .historyChevron{transform:rotate(180deg)}
+.dailyHistoryContent{display:grid;grid-template-rows:0fr;opacity:0;transform:translateY(-3px);transition:grid-template-rows .34s cubic-bezier(.22,1,.36,1),opacity .22s ease,transform .34s cubic-bezier(.22,1,.36,1)}
+.dailyHistory.open .dailyHistoryContent{grid-template-rows:1fr;opacity:1;transform:none}
+.dailyHistoryInner{min-height:0;overflow:hidden;padding-top:8px}.dailyMonth{margin-bottom:8px;border:1px solid #dfe6e1;border-radius:14px;background:#fff;overflow:hidden}
+.dailyMonthHead{width:100%;min-height:48px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 12px;background:#fff;color:var(--txt);text-align:left;font-size:14px;font-weight:760}
+.dailyMonthHead .monthChevron{color:#7b8780;transition:transform .28s cubic-bezier(.22,1,.36,1)}.dailyMonth.open .monthChevron{transform:rotate(180deg)}
+.dailyMonthDetails{display:none;padding:4px 12px 11px;border-top:1px solid #e8ede9;background:#fbfcfb}.dailyMonth.open .dailyMonthDetails{display:block}
+.dailyCatRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:7px 0;font-size:13px}.dailyCatRow span:first-child{font-weight:650}.dailyCatRow span:last-child{font-weight:800;white-space:nowrap}
+.dailyHistoryNote{margin-top:6px;color:#87928b;font-size:10.5px;line-height:1.4}.dailyClearRow{display:flex;justify-content:flex-end;padding:4px 0 2px}
+.dailyClear{padding:8px 0;background:transparent;color:#9a514b;font-size:12px;font-weight:750}
+@media(max-width:600px){
+ .dailyHead{min-height:74px;padding:11px}.dailyIcon{width:47px;height:47px;margin-right:11px;border-radius:15px}.dailyTitle b{font-size:17px}.dailyTitle span{font-size:11px}
+ .dailyBodyInner{padding:0 10px}.dailyBox{padding:11px}.dailyForm{grid-template-columns:1fr 90px}.dailyEntry{grid-template-columns:minmax(0,1fr) auto 36px}.dailyEntryAmount{font-size:13px}
+}
+
 /* =========================
    TAX
 ========================= */
@@ -1148,6 +1189,42 @@ onclick="addExpense()">
 </div>
 
 
+<!-- DAGENS FORBRUG -->
+<div class="dailyCard" id="dailySpendCard">
+<button type="button" class="dailyHead" onclick="toggleDailySpend(this)">
+<div class="dailyIcon">
+<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h14l-1 10H6L5 8Z"></path><path d="M9 8a3 3 0 0 1 6 0"></path><path d="M9 12h.01M15 12h.01"></path></svg>
+</div>
+<div class="dailyTitle"><b>Dagens forbrug</b><span id="dailySpendMeta">Brugt i dag · 0 kr.</span></div>
+<div class="dailyChevron">⌄</div>
+</button>
+<div class="dailyBody"><div class="dailyBodyInner"><div class="dailyBox">
+<div class="dailyStats">
+<div class="dailyStat"><small>Denne måned</small><strong id="dailyMonthTotal">0 kr.</strong></div>
+<div class="dailyStat"><small>Til rådighed</small><strong id="dailyAvailable">0 kr.</strong></div>
+</div>
+<div class="dailyAddTitle">Tilføj udgift</div>
+<div class="dailyForm">
+<input id="dailyName" class="dailyName" type="text" placeholder="Hvad købte du?">
+<input id="dailyAmount" type="text" inputmode="decimal" placeholder="Beløb">
+<select id="dailyCategory">
+<option>Andet</option><option>Bolig & Husholdning</option><option>Dagligvare</option><option>Fritid</option><option>Gaver</option><option>Personlig pleje</option><option>Restaurant & Takeaway</option><option>Shopping</option><option>Sundhed</option><option>Transport</option><option>Underholdning</option>
+</select>
+<input id="dailyDate" class="dailyDate" type="date">
+</div>
+<button type="button" class="dailyAdd" onclick="addDailyExpense()">+ Tilføj udgift</button>
+<div class="dailyHint">Faste udgifter er allerede med i dit budget — registrér kun variable køb her.</div>
+<div id="dailyCurrentList"></div>
+<div class="dailyDivider"></div>
+<div class="dailySubHead">Historik</div>
+<div class="dailyHistory" id="dailyHistory">
+<button type="button" class="dailyHistoryToggle" onclick="toggleDailyHistory(event)"><span>Se tidligere måneder</span><span class="historyChevron">⌄</span></button>
+<div class="dailyHistoryContent"><div class="dailyHistoryInner" id="dailyHistoryList"></div></div>
+</div>
+<div class="dailyClearRow"><button type="button" class="dailyClear" onclick="confirmClearDailyExpenses()">Ryd månedens udgifter</button></div>
+</div></div></div>
+</div>
+
 <!-- INVESTERING -->
 <div class="acc">
 
@@ -1604,6 +1681,7 @@ var DEFAULT_EXPENSES=[];
 var incomes=loadJson("mb_final_v3_incomes",DEFAULT_INCOMES);
 var expenses=loadJson("mb_final_v3_expenses",DEFAULT_EXPENSES);
 var loans=loadJson("mb_final_v3_loans",[]);
+var dailyExpenses=loadJson("mb_final_v3_daily_expenses",[]);
 
 
 /* =========================
@@ -1638,6 +1716,11 @@ function save(){
   localStorage.setItem(
    "mb_final_v3_loans",
    JSON.stringify(loans)
+  );
+
+  localStorage.setItem(
+   "mb_final_v3_daily_expenses",
+   JSON.stringify(dailyExpenses)
   );
 
   [
@@ -1981,7 +2064,7 @@ function updateBudget(){
   document.getElementById("investment").value
  );
 
- var balance=income-expense-invest;
+ var balance=income-expense-invest-dailyMonthTotal();
 
 
  document.getElementById(
@@ -2024,10 +2107,115 @@ function updateBudget(){
 
  }
 
+ renderDailyExpenses();
  save();
 
 }
 
+
+
+/* =========================
+   DAGENS FORBRUG
+========================= */
+function todayDateString(){
+ var d=new Date();
+ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function currentMonthKey(){return todayDateString().slice(0,7);}
+function dailyMonthTotal(){
+ var key=currentMonthKey();
+ return dailyExpenses.reduce(function(s,x){return String(x.date).slice(0,7)===key?s+n(x.amount):s;},0);
+}
+function dailyTodayTotal(){
+ var key=todayDateString();
+ return dailyExpenses.reduce(function(s,x){return String(x.date)===key?s+n(x.amount):s;},0);
+}
+function dailyMonthName(key){
+ var p=String(key).split("-"),d=new Date(Number(p[0]),Number(p[1])-1,1);
+ return d.toLocaleDateString("da-DK",{month:"long",year:"numeric"});
+}
+function dailyDayLabel(key){
+ var p=String(key).split("-"),d=new Date(Number(p[0]),Number(p[1])-1,Number(p[2]));
+ return d.toLocaleDateString("da-DK",{day:"numeric",month:"long"});
+}
+function toggleDailySpend(){
+ var card=document.getElementById("dailySpendCard");
+ if(card)card.classList.toggle("open");
+}
+function toggleDailyHistory(event){
+ if(event)event.stopPropagation();
+ var el=document.getElementById("dailyHistory");
+ if(el)el.classList.toggle("open");
+}
+function addDailyExpense(){
+ var name=document.getElementById("dailyName").value.trim();
+ var amount=n(document.getElementById("dailyAmount").value);
+ var category=document.getElementById("dailyCategory").value;
+ var date=document.getElementById("dailyDate").value||todayDateString();
+ if(!name||amount<=0){alert("Skriv hvad du har købt og indtast et beløb.");return;}
+ dailyExpenses.push({id:Date.now(),name:name,amount:amount,category:category,date:date});
+ document.getElementById("dailyName").value="";
+ document.getElementById("dailyAmount").value="";
+ save();renderDailyExpenses();updateBudget();
+}
+function removeDailyExpense(id){
+ dailyExpenses=dailyExpenses.filter(function(x){return String(x.id)!==String(id);});
+ save();renderDailyExpenses();updateBudget();
+}
+function renderDailyExpenses(){
+ var key=currentMonthKey();
+ var items=dailyExpenses.filter(function(x){return String(x.date).slice(0,7)===key;}).sort(function(a,b){return String(b.date).localeCompare(String(a.date))||Number(b.id)-Number(a.id);});
+ var today=dailyTodayTotal(),month=dailyMonthTotal();
+ var income=incomes.reduce(function(s,i){return s+n(i.amount);},0);
+ var fixed=expenses.reduce(function(s,i){return s+n(i.amount);},0);
+ var invest=n(document.getElementById("investment").value);
+ var available=income-fixed-invest-month;
+ document.getElementById("dailySpendMeta").textContent="Brugt i dag · "+fmt(today)+" kr.";
+ document.getElementById("dailyMonthTotal").textContent=fmt(month)+" kr.";
+ document.getElementById("dailyAvailable").textContent=fmt(available)+" kr.";
+ var host=document.getElementById("dailyCurrentList");
+ if(!items.length){host.innerHTML='<div style="padding-top:13px;color:#7d8981;font-size:13px">Ingen registrerede udgifter endnu.</div>';}
+ else{
+  var groups={};
+  items.forEach(function(x){(groups[x.date]||(groups[x.date]=[])).push(x);});
+  var dates=Object.keys(groups).sort(function(a,b){return b.localeCompare(a);});
+  host.innerHTML=dates.map(function(date){
+   var arr=groups[date],total=arr.reduce(function(s,x){return s+n(x.amount);},0);
+   return '<div class="dailyDay"><div class="dailyDayHead"><span>'+escapeHtml(dailyDayLabel(date))+'</span><span class="dailyDayTotal">'+fmt(total)+' kr.</span></div>'+
+   arr.map(function(x){return '<div class="dailyEntry"><div><div class="dailyEntryName">'+escapeHtml(x.name)+'</div><div class="dailyEntrySub">'+escapeHtml(x.category)+'</div></div><div class="dailyEntryAmount">'+fmt(x.amount)+' kr.</div><button type="button" class="dailyDelete" onclick="removeDailyExpense('+JSON.stringify(x.id)+')">×</button></div>';}).join("")+
+   '</div>';
+  }).join("");
+ }
+ renderDailyHistory();
+}
+function renderDailyHistory(){
+ var grouped={};
+ dailyExpenses.forEach(function(x){var k=String(x.date).slice(0,7);(grouped[k]||(grouped[k]=[])).push(x);});
+ var keys=Object.keys(grouped).sort(function(a,b){return b.localeCompare(a);});
+ var host=document.getElementById("dailyHistoryList");
+ if(!keys.length){host.innerHTML='<div style="padding:4px 1px 10px;color:#7d8981;font-size:12px">Ingen historik endnu.</div>';return;}
+ host.innerHTML=keys.map(function(key,index){
+  var items=grouped[key],total=items.reduce(function(s,x){return s+n(x.amount);},0),cats={};
+  items.forEach(function(x){cats[x.category]=(cats[x.category]||0)+n(x.amount);});
+  var sorted=Object.keys(cats).sort(function(a,b){return a.localeCompare(b,"da");});
+  return '<div class="dailyMonth '+(index===0?"open":"")+'"><button type="button" class="dailyMonthHead" onclick="toggleDailyMonth(event,this)"><span>'+escapeHtml(dailyMonthName(key))+'</span><span>'+fmt(total)+' kr. <span class="monthChevron">⌄</span></span></button><div class="dailyMonthDetails">'+
+  sorted.map(function(c){return '<div class="dailyCatRow"><span>'+escapeHtml(c)+'</span><span>'+fmt(cats[c])+' kr.</span></div>';}).join("")+
+  '<div class="dailyHistoryNote">Kategorier sorteret alfabetisk · faste udgifter er ikke med.</div></div></div>';
+ }).join("");
+}
+function toggleDailyMonth(event,button){
+ if(event)event.stopPropagation();
+ var el=button.closest(".dailyMonth");
+ if(el)el.classList.toggle("open");
+}
+function confirmClearDailyExpenses(){
+ var key=currentMonthKey();
+ var count=dailyExpenses.filter(function(x){return String(x.date).slice(0,7)===key;}).length;
+ if(!count){alert("Der er ingen udgifter at rydde for denne måned.");return;}
+ if(!confirm("Er du sikker på, at du vil rydde alle registrerede udgifter for denne måned?"))return;
+ dailyExpenses=dailyExpenses.filter(function(x){return String(x.date).slice(0,7)!==key;});
+ save();renderDailyExpenses();updateBudget();
+}
 
 /* =========================
    TRANSPORT
@@ -2801,6 +2989,10 @@ function modalBackground(e){
 /* =========================
    START
 ========================= */
+
+var dailyDateField=document.getElementById("dailyDate");
+if(dailyDateField)dailyDateField.value=todayDateString();
+renderDailyExpenses();
 
 loadFields();
 
