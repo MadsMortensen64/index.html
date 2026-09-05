@@ -1,3 +1,4 @@
+```
 <!doctype html>
 <html lang="da">
 <head>
@@ -1111,6 +1112,34 @@ body.mbIntroDone .logo{animation:mbAppIn .55s cubic-bezier(.16,1,.3,1) forwards}
 }
 </style>
 
+
+<style id="insurance-preview-css">
+.insuranceAcc .insuranceIcon{background:#eef4f0;color:#24624e;width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:0 0 42px}
+.insuranceIcon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.insuranceBox{padding:18px}
+.insuranceIntro p{margin:6px 0 0;color:var(--mut);font-size:13px;line-height:1.5;max-width:720px}
+.insuranceOverview{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.insuranceMetric{padding:13px 14px;border:1px solid #e7ece8;border-radius:15px;background:#fbfcfb;min-width:0}
+.insuranceMetric.current{background:#f0f7f2;border-color:#d7e9dc}
+.insuranceMetric small{display:block;color:#718078;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.insuranceMetric strong{display:block;margin-top:5px;font-size:19px;color:#123f31;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.insuranceMetric span{display:block;margin-top:3px;color:#8a948e;font-size:11px;line-height:1.35}
+.insuranceRow{padding:14px 0;border-top:1px solid #edf0ee}
+.insuranceGrid{display:grid;grid-template-columns:1.35fr .8fr .8fr 1fr auto;gap:8px;align-items:end}
+.insuranceField{display:flex;flex-direction:column;gap:5px}
+.insuranceField label{font-size:11px;font-weight:700;color:#718078}
+.insuranceField input,.insuranceField select{width:100%;box-sizing:border-box}
+.insuranceCalc{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:10px;padding:10px 12px;border-radius:12px;background:#f7f9f7}
+.insuranceCalc strong{font-size:13px;color:#123f31}
+.insuranceCalc span{font-size:11px;color:#7d8981}
+.insuranceDelete{width:42px;height:42px;border:0;border-radius:12px;background:#f9efee;color:#a23b35;font-size:22px;cursor:pointer}
+.insuranceTag{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:6px 9px;border-radius:999px;background:#f2f6f3;color:#51615a;font-size:11px;font-weight:700}
+.insuranceTag.actual{background:#eaf5ed;color:#266347}
+.insuranceNote{display:flex;gap:9px;align-items:flex-start;margin-top:15px;padding:12px 13px;border-radius:13px;background:#faf8f1;color:#6d675b;font-size:12px;line-height:1.45}
+.insuranceNoteIcon{flex:0 0 20px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#efe8d5;color:#887652;font-weight:800;font-size:11px}
+@media(max-width:760px){.insuranceOverview{grid-template-columns:1fr}.insuranceGrid{grid-template-columns:1fr 1fr}.insuranceField:first-child{grid-column:1/-1}.insuranceDelete{align-self:end}.insuranceCalc{flex-direction:column;align-items:flex-start}}
+</style>
+
 </head>
 
 <body>
@@ -1295,6 +1324,31 @@ onclick="addExpense()">
 
 </div>
 
+</div>
+
+
+<!-- FORSIKRINGER: FULL PREVIEW -->
+<div class="acc insuranceAcc">
+<button type="button" class="accHead accordion-toggle" onclick="toggleAcc(this)">
+<div class="accIcon insuranceIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.5 19 6v5.1c0 4.4-2.8 7.8-7 9.4-4.2-1.6-7-5-7-9.4V6l7-2.5Z"></path><path d="m8.9 12.1 2 2 4.5-4.7"></path></svg></div>
+<div class="accTitle"><b>Forsikringer</b><span>Faste forsikringer med korrekt betalingsperiode</span></div>
+<div class="chev">⌄</div>
+</button>
+<div class="accBody">
+<div class="box insuranceBox">
+<div class="insuranceIntro">
+<div><h3>Mine forsikringer</h3><p>Registrér beløb, betalingsinterval og hvilken måned betalingen starter. Budgettet trækker kun den <b>faktiske betaling</b> fra i den måned, den forfalder.</p></div>
+</div>
+<div class="insuranceOverview">
+<div class="insuranceMetric"><small>Gennemsnit pr. måned</small><strong id="insuranceAverage">0 kr.</strong><span>til langsigtet planlægning</span></div>
+<div class="insuranceMetric current"><small>Betaling denne måned</small><strong id="insuranceThisMonth">0 kr.</strong><span>påvirker rådighedsbeløbet</span></div>
+<div class="insuranceMetric"><small>Næste betaling</small><strong id="insuranceNextName">Ingen</strong><span id="insuranceNextMeta">Tilføj en forsikring</span></div>
+</div>
+<div id="insuranceList"></div>
+<button type="button" class="add" onclick="addInsurance()">+ Tilføj forsikring</button>
+<div class="insuranceNote"><span class="insuranceNoteIcon">i</span><span><b>Sådan virker det:</b> En årlig forsikring på 4.800 kr. kan fx vises som 400 kr. i gennemsnit pr. måned, men hele 4.800 kr. trækkes kun i den valgte betalingsmåned.</span></div>
+</div>
+</div>
 </div>
 
 
@@ -3495,5 +3549,121 @@ document.body.classList.add("mbIntroRunning");
 })();
 </script>
 
+<script id="insurance-preview-js">
+(function(){
+  var previewInsuranceKey="mb_final_v3_insurances";
+  var saved=null; try{saved=JSON.parse(localStorage.getItem(previewInsuranceKey)||"null");}catch(e){}
+  var insurances=Array.isArray(saved)?saved:[];
+
+  function fmtMoney(v){return Math.round(v||0).toLocaleString("da-DK")+" kr.";}
+  function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  function frequencyMeta(f){return ({monthly:{label:"Månedligt",months:1,mult:12},quarterly:{label:"Kvartalsvist",months:3,mult:4},halfyearly:{label:"Halvårligt",months:6,mult:2},yearly:{label:"Årligt",months:12,mult:1}})[f]||({label:"Månedligt",months:1,mult:12});}
+  function monthName(m){return new Date(2026,m-1,1).toLocaleDateString("da-DK",{month:"long"});}
+  function currentMonth(){return new Date().getMonth()+1;}
+  function dueInMonth(item,m){var meta=frequencyMeta(item.frequency);var start=Number(item.startMonth)||1;if(m<start)return false;return ((m-start)%meta.months)===0;}
+  function averageMonthly(item){var meta=frequencyMeta(item.frequency);return Number(item.amount||0)*meta.mult/12;}
+  function nextDue(item){
+    var meta=frequencyMeta(item.frequency);
+    var m=currentMonth();
+    var start=Number(item.startMonth)||1;
+    for(var step=0;step<12;step++){
+      var cand=((m-1+step)%12)+1;
+      var diff=(cand-start+12)%12;
+      if(diff%meta.months===0) return cand;
+    }
+    return start;
+  }
+  function saveInsurance(){try{localStorage.setItem(previewInsuranceKey,JSON.stringify(insurances));}catch(e){}}
+
+  window.addInsurance=function(){insurances.push({id:Date.now(),name:"Ny forsikring",amount:0,frequency:"monthly",startMonth:currentMonth()});renderInsurance();refreshInsuranceBudget();};
+  window.removeInsurance=function(i){insurances.splice(i,1);renderInsurance();refreshInsuranceBudget();};
+  window.editInsurance=function(i,key,val){
+    if(!insurances[i])return;
+
+    if(key==="amount"){
+      var raw=String(val);
+      var normalized=raw.replace(/\./g,"").replace(",", ".");
+      val=parseFloat(normalized);
+      if(!isFinite(val)) val=0;
+    }
+    if(key==="startMonth") val=Number(val);
+
+    insurances[i][key]=val;
+    saveInsurance();
+
+    /*
+      Tekstfelter skal IKKE re-rendres mens brugeren skriver — ellers mistes
+      fokus efter hvert tegn. Valgfelter må derimod gerne re-rendres, fordi
+      de først ændres på change og skal opdatere beregning/status med det samme.
+    */
+    if(key==="frequency" || key==="startMonth"){
+      renderInsurance(false);
+    }
+    refreshInsuranceBudget();
+  };
+
+  function renderInsurance(focus){
+    var host=document.getElementById("insuranceList");if(!host)return;
+    host.innerHTML=insurances.map(function(x,i){var meta=frequencyMeta(x.frequency),avg=averageMonthly(x),due=dueInMonth(x,currentMonth());return '<div class="insuranceRow">'+
+      '<div class="insuranceGrid">'+
+      '<div class="insuranceField"><label>Forsikring</label><input type="text" value="'+esc(x.name)+'" placeholder="Fx. Bilforsikring" oninput="editInsurance('+i+',\'name\',this.value)"></div>'+
+      '<div class="insuranceField"><label>Beløb</label><input type="text" inputmode="decimal" value="'+(x.amount?String(x.amount).replace(".",","):"")+'" placeholder="0 kr." oninput="editInsurance('+i+',\'amount\',this.value)"></div>'+
+      '<div class="insuranceField"><label>Betales</label><select onchange="editInsurance('+i+',\'frequency\',this.value)">'+
+      '<option value="monthly" '+(x.frequency==="monthly"?"selected":"")+'>Månedligt</option><option value="quarterly" '+(x.frequency==="quarterly"?"selected":"")+'>Kvartalsvist</option><option value="halfyearly" '+(x.frequency==="halfyearly"?"selected":"")+'>Halvårligt</option><option value="yearly" '+(x.frequency==="yearly"?"selected":"")+'>Årligt</option></select></div>'+
+      '<div class="insuranceField"><label>Første betalingsmåned</label><select onchange="editInsurance('+i+',\'startMonth\',this.value)">'+Array.from({length:12},function(_,m){var mm=m+1;return '<option value="'+mm+'" '+(Number(x.startMonth)===mm?"selected":"")+'>'+monthName(mm).replace(/^[A-ZÆØÅ]/,function(c){return c.toUpperCase();})+'</option>';}).join('')+'</select></div>'+
+      '<button type="button" class="insuranceDelete" onclick="removeInsurance('+i+')" aria-label="Slet forsikring">×</button>'+
+      '</div>'+
+      '<div class="insuranceCalc"><div><strong>≈ '+fmtMoney(avg)+' pr. måned i gennemsnit</strong><div class="insuranceTag '+(due?"actual":"")+'">'+(due?"✓ Betaling denne måned · "+fmtMoney(x.amount):"Ingen betaling denne måned")+'</div></div><span>'+meta.label+' · hver '+meta.months+((meta.months===1)?" måned":". måned")+'</span></div>'+
+      '</div>';}).join('');
+    updateInsuranceOverview();
+  }
+
+  function updateInsuranceOverview(){
+    var avg=insurances.reduce(function(s,x){return s+averageMonthly(x);},0);
+    var actual=insurances.reduce(function(s,x){return dueInMonth(x,currentMonth())?s+Number(x.amount||0):s;},0);
+    var next=null,nextM=99;
+    insurances.forEach(function(x){var nm=nextDue(x);var delta=(nm-currentMonth()+12)%12;if(delta<nextM){nextM=delta;next={x:x,m:nm};}});
+    var a=document.getElementById("insuranceAverage"),b=document.getElementById("insuranceThisMonth"),c=document.getElementById("insuranceNextName"),d=document.getElementById("insuranceNextMeta");
+    if(a)a.textContent=fmtMoney(avg);if(b)b.textContent=fmtMoney(actual);
+    if(c)c.textContent=next?esc(next.x.name||"Forsikring"):"Ingen";
+    if(d)d.textContent=next?monthName(next.m)+" · "+fmtMoney(next.x.amount):"Tilføj en forsikring";
+  }
+
+  function actualInsuranceThisMonth(){return insurances.reduce(function(s,x){return dueInMonth(x,currentMonth())?s+Number(x.amount||0):s;},0);}
+  function refreshInsuranceBudget(){
+    updateInsuranceOverview();
+    try{
+      var income=incomes.reduce(function(s,i){return s+n(i.amount);},0);
+      var expense=expenses.reduce(function(s,i){return s+n(i.amount);},0);
+      var invest=n(document.getElementById("investment").value);
+      var daily=dailyMonthTotal();
+      var insurance=actualInsuranceThisMonth();
+      var balance=income-expense-insurance-invest-daily;
+      document.getElementById("sumIncome").textContent=fmt(income)+" kr.";
+      document.getElementById("sumExpense").textContent=fmt(expense+insurance)+" kr.";
+      document.getElementById("sumInvest").textContent=fmt(invest)+" kr.";
+      document.getElementById("balance").innerHTML=fmt(balance)+' <span>kr.</span>';
+      var badge=document.getElementById("badge");badge.className="badge";if(balance>0){badge.classList.add("pos");badge.textContent="↗ Positiv økonomi"}else if(balance<0){badge.classList.add("neg");badge.textContent="↘ Negativ økonomi"}else{badge.classList.add("neu");badge.textContent="− Balance"}
+      var back=document.getElementById("heroSpendBack");if(back)back.innerHTML="Forbrug tilbage i denne måned · <strong>"+fmt(income-expense-insurance-invest-daily)+" kr.</strong>";
+      var dav=document.getElementById("dailyAvailable");if(dav)dav.textContent=fmt(income-expense-insurance-invest-daily)+" kr.";
+      renderTopSpendStats();
+      renderDailyExpenses();
+      saveInsurance();
+    }catch(e){}
+  }
+  window.updateBudget=refreshInsuranceBudget;
+  var oldEditIncomeAmount=window.editIncomeAmount;
+  var oldEditExpenseAmount=window.editExpenseAmount;
+  window.editIncomeAmount=function(i,v){incomes[i].amount=n(v);save();refreshInsuranceBudget();};
+  window.editExpenseAmount=function(i,v){expenses[i].amount=n(v);save();refreshInsuranceBudget();};
+  window.removeIncome=window.removeIncome||function(i){};
+  window.removeExpense=window.removeExpense||function(i){};
+  document.addEventListener("DOMContentLoaded",function(){renderInsurance(true);setTimeout(refreshInsuranceBudget,50);});
+  renderInsurance(true);
+  setTimeout(refreshInsuranceBudget,60);
+})();
+</script>
+
 </body>
 </html>
+```
