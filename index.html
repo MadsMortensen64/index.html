@@ -3555,81 +3555,132 @@ document.body.classList.add("mbIntroRunning");
   var saved=null; try{saved=JSON.parse(localStorage.getItem(previewInsuranceKey)||"null");}catch(e){}
   var insurances=Array.isArray(saved)?saved:[];
 
-  function fmtMoney(v){return Math.round(v||0).toLocaleString("da-DK")+" kr.";}
+  function fmtMoney(v){return Math.round(Number(v)||0).toLocaleString("da-DK")+" kr.";}
   function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
   function frequencyMeta(f){return ({monthly:{label:"Månedligt",months:1,mult:12},quarterly:{label:"Kvartalsvist",months:3,mult:4},halfyearly:{label:"Halvårligt",months:6,mult:2},yearly:{label:"Årligt",months:12,mult:1}})[f]||({label:"Månedligt",months:1,mult:12});}
   function monthName(m){return new Date(2026,m-1,1).toLocaleDateString("da-DK",{month:"long"});}
-  function currentMonth(){return new Date().getMonth()+1;}
-  function dueInMonth(item,m){var meta=frequencyMeta(item.frequency);var start=Number(item.startMonth)||1;if(m<start)return false;return ((m-start)%meta.months)===0;}
-  function averageMonthly(item){var meta=frequencyMeta(item.frequency);return Number(item.amount||0)*meta.mult/12;}
-  function nextDue(item){
-    var meta=frequencyMeta(item.frequency);
-    var m=currentMonth();
-    var start=Number(item.startMonth)||1;
-    for(var step=0;step<12;step++){
-      var cand=((m-1+step)%12)+1;
-      var diff=(cand-start+12)%12;
-      if(diff%meta.months===0) return cand;
+  function now(){return new Date();}
+  function currentMonth(){return now().getMonth()+1;}
+  function currentYear(){return now().getFullYear();}
+  function absMonth(year,month){return Number(year)*12+(Number(month)-1);}
+  function currentAbsMonth(){return absMonth(currentYear(),currentMonth());}
+
+  /*
+    Første betalingsmåned må IKKE tælle baglæns.
+    Hvis en forsikring oprettes i september og første betaling vælges til oktober,
+    starter cyklussen i oktober – også for månedlige betalinger.
+    startYear gemmes ved nye ændringer. For gamle poster udleder vi året ud fra
+    deres Date.now()-id (oprettelsestidspunkt), så eksisterende data migreres pænt.
+  */
+  function inferStartYear(item){
+    if(Number(item.startYear)) return Number(item.startYear);
+    var created=null;
+    if(item && item.id && /^\d{10,}$/.test(String(item.id))){
+      var d=new Date(Number(item.id));
+      if(!isNaN(d.getTime())) created=d;
     }
-    return start;
+    if(!created) created=now();
+    var sm=Number(item.startMonth)||created.getMonth()+1;
+    var y=created.getFullYear();
+    return sm>=created.getMonth()+1 ? y : y+1;
   }
+  function startAbsMonth(item){return absMonth(inferStartYear(item),Number(item.startMonth)||1);}
+
+  function dueInAbsMonth(item,targetAbs){
+    var meta=frequencyMeta(item.frequency);
+    var start=startAbsMonth(item);
+    var diff=targetAbs-start;
+    return diff>=0 && diff%meta.months===0;
+  }
+  function dueInMonth(item,m,year){
+    return dueInAbsMonth(item,absMonth(year||currentYear(),m));
+  }
+  function averageMonthly(item){var meta=frequencyMeta(item.frequency);return (Number(item.amount)||0)*meta.mult/12;}
+
+  /* Finder første faktiske kommende betaling EFTER indeværende måned. */
+  function nextDueInfo(item){
+    var meta=frequencyMeta(item.frequency), cur=currentAbsMonth(), start=startAbsMonth(item);
+    var candidate=Math.max(cur+1,start);
+    var rem=(candidate-start)%meta.months;
+    if(rem!==0) candidate+=meta.months-rem;
+    return {abs:candidate,month:(candidate%12)+1,year:Math.floor(candidate/12)};
+  }
+  function monthsUntilNextDue(item){return nextDueInfo(item).abs-currentAbsMonth();}
   function saveInsurance(){try{localStorage.setItem(previewInsuranceKey,JSON.stringify(insurances));}catch(e){}}
 
-  window.addInsurance=function(){insurances.push({id:Date.now(),name:"Ny forsikring",amount:0,frequency:"monthly",startMonth:currentMonth()});renderInsurance();refreshInsuranceBudget();};
-  window.removeInsurance=function(i){insurances.splice(i,1);renderInsurance();refreshInsuranceBudget();};
+  /* Migrér gamle poster én gang uden at ændre brugerens øvrige data. */
+  insurances.forEach(function(x){
+    if(!Number(x.startYear)) x.startYear=inferStartYear(x);
+    if(!x.frequency) x.frequency="monthly";
+    if(!Number(x.startMonth)) x.startMonth=currentMonth();
+  });
+  saveInsurance();
+
+  window.addInsurance=function(){
+    var d=now();
+    insurances.push({id:Date.now(),name:"Ny forsikring",amount:0,frequency:"monthly",startMonth:currentMonth(),startYear:d.getFullYear()});
+    saveInsurance();renderInsurance();refreshInsuranceBudget();
+  };
+  window.removeInsurance=function(i){insurances.splice(i,1);saveInsurance();renderInsurance();refreshInsuranceBudget();};
   window.editInsurance=function(i,key,val){
     if(!insurances[i])return;
-
     if(key==="amount"){
       var raw=String(val);
       var normalized=raw.replace(/\./g,"").replace(",", ".");
-      val=parseFloat(normalized);
-      if(!isFinite(val)) val=0;
+      val=parseFloat(normalized); if(!isFinite(val)) val=0;
     }
-    if(key==="startMonth") val=Number(val);
-
+    if(key==="startMonth"){
+      val=Number(val);
+      insurances[i].startYear=(val>=currentMonth()?currentYear():currentYear()+1);
+    }
     insurances[i][key]=val;
     saveInsurance();
-
-    /*
-      Tekstfelter skal IKKE re-rendres mens brugeren skriver — ellers mistes
-      fokus efter hvert tegn. Valgfelter må derimod gerne re-rendres, fordi
-      de først ændres på change og skal opdatere beregning/status med det samme.
-    */
-    if(key==="frequency" || key==="startMonth"){
-      renderInsurance(false);
-    }
+    if(key==="frequency" || key==="startMonth") renderInsurance(false);
     refreshInsuranceBudget();
   };
 
-  function renderInsurance(focus){
+  function renderInsurance(){
     var host=document.getElementById("insuranceList");if(!host)return;
-    host.innerHTML=insurances.map(function(x,i){var meta=frequencyMeta(x.frequency),avg=averageMonthly(x),due=dueInMonth(x,currentMonth());return '<div class="insuranceRow">'+
-      '<div class="insuranceGrid">'+
-      '<div class="insuranceField"><label>Forsikring</label><input type="text" value="'+esc(x.name)+'" placeholder="Fx. Bilforsikring" oninput="editInsurance('+i+',\'name\',this.value)"></div>'+
-      '<div class="insuranceField"><label>Beløb</label><input type="text" inputmode="decimal" value="'+(x.amount?String(x.amount).replace(".",","):"")+'" placeholder="0 kr." oninput="editInsurance('+i+',\'amount\',this.value)"></div>'+
-      '<div class="insuranceField"><label>Betales</label><select onchange="editInsurance('+i+',\'frequency\',this.value)">'+
-      '<option value="monthly" '+(x.frequency==="monthly"?"selected":"")+'>Månedligt</option><option value="quarterly" '+(x.frequency==="quarterly"?"selected":"")+'>Kvartalsvist</option><option value="halfyearly" '+(x.frequency==="halfyearly"?"selected":"")+'>Halvårligt</option><option value="yearly" '+(x.frequency==="yearly"?"selected":"")+'>Årligt</option></select></div>'+
-      '<div class="insuranceField"><label>Første betalingsmåned</label><select onchange="editInsurance('+i+',\'startMonth\',this.value)">'+Array.from({length:12},function(_,m){var mm=m+1;return '<option value="'+mm+'" '+(Number(x.startMonth)===mm?"selected":"")+'>'+monthName(mm).replace(/^[A-ZÆØÅ]/,function(c){return c.toUpperCase();})+'</option>';}).join('')+'</select></div>'+
-      '<button type="button" class="insuranceDelete" onclick="removeInsurance('+i+')" aria-label="Slet forsikring">×</button>'+
-      '</div>'+
-      '<div class="insuranceCalc"><div><strong>≈ '+fmtMoney(avg)+' pr. måned i gennemsnit</strong><div class="insuranceTag '+(due?"actual":"")+'">'+(due?"✓ Betaling denne måned · "+fmtMoney(x.amount):"Ingen betaling denne måned")+'</div></div><span>'+meta.label+' · hver '+meta.months+((meta.months===1)?" måned":". måned")+'</span></div>'+
-      '</div>';}).join('');
+    host.innerHTML=insurances.map(function(x,i){
+      var meta=frequencyMeta(x.frequency),avg=averageMonthly(x),due=dueInAbsMonth(x,currentAbsMonth());
+      return '<div class="insuranceRow">'+
+        '<div class="insuranceGrid">'+
+        '<div class="insuranceField"><label>Forsikring</label><input type="text" value="'+esc(x.name)+'" placeholder="Fx. Bilforsikring" oninput="editInsurance('+i+',\'name\',this.value)"></div>'+
+        '<div class="insuranceField"><label>Beløb</label><input type="text" inputmode="decimal" value="'+(x.amount?String(x.amount).replace(".",","):"")+'" placeholder="0 kr." oninput="editInsurance('+i+',\'amount\',this.value)"></div>'+
+        '<div class="insuranceField"><label>Betales</label><select onchange="editInsurance('+i+',\'frequency\',this.value)">'+
+        '<option value="monthly" '+(x.frequency==="monthly"?"selected":"")+'>Månedligt</option><option value="quarterly" '+(x.frequency==="quarterly"?"selected":"")+'>Kvartalsvist</option><option value="halfyearly" '+(x.frequency==="halfyearly"?"selected":"")+'>Halvårligt</option><option value="yearly" '+(x.frequency==="yearly"?"selected":"")+'>Årligt</option></select></div>'+
+        '<div class="insuranceField"><label>Første betalingsmåned</label><select onchange="editInsurance('+i+',\'startMonth\',this.value)">'+Array.from({length:12},function(_,m){var mm=m+1;return '<option value="'+mm+'" '+(Number(x.startMonth)===mm?"selected":"")+'>'+monthName(mm).replace(/^[A-ZÆØÅ]/,function(c){return c.toUpperCase();})+'</option>';}).join('')+'</select></div>'+
+        '<button type="button" class="insuranceDelete" onclick="removeInsurance('+i+')" aria-label="Slet forsikring">×</button></div>'+
+        '<div class="insuranceCalc"><div><strong>≈ '+fmtMoney(avg)+' pr. måned i gennemsnit</strong><div class="insuranceTag '+(due?"actual":"")+'">'+(due?"✓ Betaling denne måned · "+fmtMoney(x.amount):"Ingen betaling denne måned")+'</div></div><span>'+meta.label+' · hver '+meta.months+((meta.months===1)?" måned":". måned")+'</span></div></div>';
+    }).join('');
     updateInsuranceOverview();
   }
 
   function updateInsuranceOverview(){
     var avg=insurances.reduce(function(s,x){return s+averageMonthly(x);},0);
-    var actual=insurances.reduce(function(s,x){return dueInMonth(x,currentMonth())?s+Number(x.amount||0):s;},0);
-    var next=null,nextM=99;
-    insurances.forEach(function(x){var nm=nextDue(x);var delta=(nm-currentMonth()+12)%12;if(delta<nextM){nextM=delta;next={x:x,m:nm};}});
+    var actual=insurances.reduce(function(s,x){return s+(dueInAbsMonth(x,currentAbsMonth())?(Number(x.amount)||0):0);},0);
+
+    /* Find den nærmeste kommende måned og HÅNDTER FLERE betalinger samme måned. */
+    var nearestAbs=Infinity, upcoming=[];
+    insurances.forEach(function(x){
+      var info=nextDueInfo(x);
+      if(info.abs<nearestAbs){nearestAbs=info.abs;upcoming=[{x:x,info:info}];}
+      else if(info.abs===nearestAbs){upcoming.push({x:x,info:info});}
+    });
     var a=document.getElementById("insuranceAverage"),b=document.getElementById("insuranceThisMonth"),c=document.getElementById("insuranceNextName"),d=document.getElementById("insuranceNextMeta");
-    if(a)a.textContent=fmtMoney(avg);if(b)b.textContent=fmtMoney(actual);
-    if(c)c.textContent=next?esc(next.x.name||"Forsikring"):"Ingen";
-    if(d)d.textContent=next?monthName(next.m)+" · "+fmtMoney(next.x.amount):"Tilføj en forsikring";
+    if(a)a.textContent=fmtMoney(avg);
+    if(b)b.textContent=fmtMoney(actual);
+    if(!upcoming.length){
+      if(c)c.textContent="Ingen";
+      if(d)d.textContent="Tilføj en forsikring";
+    }else{
+      var first=upcoming[0], total=upcoming.reduce(function(s,v){return s+(Number(v.x.amount)||0);},0);
+      if(c)c.textContent=upcoming.length===1?(first.x.name||"Forsikring"):upcoming.length+" betalinger";
+      if(d)d.textContent=monthName(first.info.month)+" · "+fmtMoney(total)+(upcoming.length>1?" samlet":"");
+    }
   }
 
-  function actualInsuranceThisMonth(){return insurances.reduce(function(s,x){return dueInMonth(x,currentMonth())?s+Number(x.amount||0):s;},0);}
+  function actualInsuranceThisMonth(){return insurances.reduce(function(s,x){return s+(dueInAbsMonth(x,currentAbsMonth())?(Number(x.amount)||0):0);},0);}
   function refreshInsuranceBudget(){
     updateInsuranceOverview();
     try{
@@ -3646,21 +3697,14 @@ document.body.classList.add("mbIntroRunning");
       var badge=document.getElementById("badge");badge.className="badge";if(balance>0){badge.classList.add("pos");badge.textContent="↗ Positiv økonomi"}else if(balance<0){badge.classList.add("neg");badge.textContent="↘ Negativ økonomi"}else{badge.classList.add("neu");badge.textContent="− Balance"}
       var back=document.getElementById("heroSpendBack");if(back)back.innerHTML="Forbrug tilbage i denne måned · <strong>"+fmt(income-expense-insurance-invest-daily)+" kr.</strong>";
       var dav=document.getElementById("dailyAvailable");if(dav)dav.textContent=fmt(income-expense-insurance-invest-daily)+" kr.";
-      renderTopSpendStats();
-      renderDailyExpenses();
-      saveInsurance();
-    }catch(e){}
+      renderTopSpendStats();renderDailyExpenses();saveInsurance();
+    }catch(e){console.warn("Insurance budget refresh failed",e);}
   }
   window.updateBudget=refreshInsuranceBudget;
-  var oldEditIncomeAmount=window.editIncomeAmount;
-  var oldEditExpenseAmount=window.editExpenseAmount;
   window.editIncomeAmount=function(i,v){incomes[i].amount=n(v);save();refreshInsuranceBudget();};
   window.editExpenseAmount=function(i,v){expenses[i].amount=n(v);save();refreshInsuranceBudget();};
-  window.removeIncome=window.removeIncome||function(i){};
-  window.removeExpense=window.removeExpense||function(i){};
-  document.addEventListener("DOMContentLoaded",function(){renderInsurance(true);setTimeout(refreshInsuranceBudget,50);});
-  renderInsurance(true);
-  setTimeout(refreshInsuranceBudget,60);
+  document.addEventListener("DOMContentLoaded",function(){renderInsurance();setTimeout(refreshInsuranceBudget,50);});
+  renderInsurance();setTimeout(refreshInsuranceBudget,60);
 })();
 </script>
 
