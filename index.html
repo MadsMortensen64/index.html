@@ -3269,6 +3269,51 @@ document.body.classList.add("mbIntroRunning");
   .loanCalc .loanTaxSaving{font-size:12px}
   .loanCalc .loanMonthlyCost{font-size:11px}
 }
+
+
+/* =========================
+   HERO – MOBILE OVERLAP FIX
+   ========================= */
+@media(max-width:600px){
+  .hero{
+    min-height:0;
+    padding:26px 22px 20px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .heroSpendBack{
+    margin-top:12px;
+    padding-right:0;
+    max-width:100%;
+    font-size:12px;
+    line-height:1.45;
+  }
+
+  /* På mobil ligger status under teksten i stedet for ovenpå den */
+  .badge{
+    position:relative;
+    right:auto;
+    bottom:auto;
+    align-self:flex-end;
+    margin-top:14px;
+    padding:9px 14px;
+    max-width:100%;
+    white-space:nowrap;
+  }
+
+  .balance{
+    font-size:clamp(48px,18vw,68px);
+    line-height:.95;
+  }
+
+  .sub{
+    font-size:15px;
+    line-height:1.3;
+  }
+}
+
 </style>
 
 
