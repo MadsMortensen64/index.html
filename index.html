@@ -1141,6 +1141,368 @@ body.mbIntroDone .logo{animation:mbAppIn .55s cubic-bezier(.16,1,.3,1) forwards}
 @media(max-width:760px){.insuranceOverview{grid-template-columns:1fr}.insuranceGrid{grid-template-columns:1fr 1fr}.insuranceField:first-child{grid-column:1/-1}.insuranceDelete{align-self:end}.insuranceCalc{flex-direction:column;align-items:flex-start}}
 </style>
 
+
+<style id="future-accordion-patch">
+.futureCard,.whatIfCard{padding:0!important;overflow:hidden}
+.futureAccordionHead{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  gap:14px;padding:16px;background:transparent;border:0;color:inherit;
+  cursor:pointer;text-align:left;font:inherit;
+}
+.futureAccordionHead .faHead{margin:0!important;flex:1}
+.futureAccordionChevron{
+  width:32px;height:32px;display:grid;place-items:center;
+  font-size:20px;color:#31433b;transition:transform .25s ease;flex:0 0 auto;
+}
+.futureCard.isOpen .futureAccordionChevron,
+.whatIfCard.isOpen .futureAccordionChevron{transform:rotate(180deg)}
+.futureAccordionBody{padding:0 16px 16px}
+.futureAccordionBody[hidden]{display:none!important}
+</style>
+
+
+<style id="accordion-uniformity-patch">
+/* Make the two new sections identical to the existing accordion headers */
+.futureCard,
+.whatIfCard{
+  margin-bottom:10px !important;
+  border-radius:21px !important;
+}
+
+.futureAccordionHead{
+  width:100% !important;
+  min-height:80px !important;
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  gap:0 !important;
+  padding:15px !important;
+  background:transparent !important;
+  color:var(--txt) !important;
+  text-align:left !important;
+  border:0 !important;
+  cursor:pointer !important;
+}
+
+.futureAccordionHead .faHead{
+  flex:1 !important;
+  min-width:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:0 !important;
+  margin:0 !important;
+}
+
+.futureAccordionHead .faIcon{
+  width:52px !important;
+  height:52px !important;
+  flex:none !important;
+  display:grid !important;
+  place-items:center !important;
+  margin-right:14px !important;
+  border-radius:17px !important;
+  font-size:22px !important;
+}
+
+.futureAccordionHead .faHead b{
+  display:block !important;
+  font-size:19px !important;
+  line-height:1.2 !important;
+  color:var(--txt) !important;
+}
+
+.futureAccordionHead .faHead span{
+  display:block !important;
+  margin-top:3px !important;
+  font-size:13px !important;
+  line-height:1.35 !important;
+  color:var(--mut) !important;
+}
+
+.futureAccordionChevron{
+  width:auto !important;
+  height:auto !important;
+  flex:none !important;
+  display:block !important;
+  padding:10px !important;
+  margin-left:auto !important;
+  font-size:22px !important;
+  line-height:1 !important;
+  color:var(--txt) !important;
+  transition:transform .2s ease !important;
+}
+</style>
+
+
+<style id="chevron-color-fix">
+/* Force every accordion chevron to use the exact same color */
+.futureAccordionChevron,
+.accChevron,
+.chevron,
+.section-chevron,
+.accordion-chevron,
+details summary::after{
+  color:#31433b !important;
+  opacity:1 !important;
+}
+
+/* SVG/icon based arrows */
+.futureAccordionChevron svg,
+.accChevron svg,
+.chevron svg,
+.section-chevron svg,
+.accordion-chevron svg{
+  stroke:#31433b !important;
+  fill:#31433b !important;
+}
+</style>
+
+
+<style id="universal-smooth-accordion">
+/* Universal smooth accordion animation — matches Dagens forbrug */
+.accBody{
+  display:grid !important;
+  grid-template-rows:0fr !important;
+  min-height:0 !important;
+  opacity:0 !important;
+  transform:translateY(-4px) !important;
+  padding:0 15px !important;
+  overflow:hidden !important;
+  transition:
+    grid-template-rows .38s cubic-bezier(.22,1,.36,1),
+    opacity .24s ease,
+    transform .38s cubic-bezier(.22,1,.36,1),
+    padding .38s cubic-bezier(.22,1,.36,1) !important;
+}
+.accBody > *{
+  min-height:0 !important;
+  overflow:hidden !important;
+}
+.acc.open .accBody{
+  grid-template-rows:1fr !important;
+  opacity:1 !important;
+  transform:none !important;
+  padding:0 15px 17px !important;
+}
+
+/* Give the two new sections the same opening/closing feel */
+.futureAccordionBody,
+.futureAccordionBody[hidden]{
+  display:block !important;
+  max-height:0 !important;
+  opacity:0 !important;
+  transform:translateY(-4px) !important;
+  overflow:hidden !important;
+  padding:0 16px !important;
+  transition:
+    max-height .38s cubic-bezier(.22,1,.36,1),
+    opacity .24s ease,
+    transform .38s cubic-bezier(.22,1,.36,1),
+    padding .38s cubic-bezier(.22,1,.36,1) !important;
+}
+.futureCard.isOpen .futureAccordionBody,
+.whatIfCard.isOpen .futureAccordionBody{
+  max-height:5000px !important;
+  opacity:1 !important;
+  transform:none !important;
+  padding:0 16px 16px !important;
+}
+
+/* Same smooth arrow timing everywhere */
+.chev,
+.dailyChevron,
+.futureAccordionChevron{
+  transition:transform .32s cubic-bezier(.22,1,.36,1) !important;
+}
+</style>
+
+
+<style id="final-uniform-card-size-fix">
+/* FINAL: all collapsed section cards match Dagens forbrug exactly */
+.acc,
+.dailyCard,
+.futureCard,
+.whatIfCard{
+  margin-bottom:10px !important;
+  border-radius:21px !important;
+  overflow:hidden !important;
+  box-sizing:border-box !important;
+}
+
+/* Same header geometry everywhere */
+.accHead,
+.dailyHead,
+.futureAccordionHead{
+  width:100% !important;
+  min-height:80px !important;
+  height:80px !important;
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  padding:15px !important;
+}
+
+/* Same icon size */
+.accIcon,
+.dailyIcon,
+.futureAccordionHead .faIcon{
+  width:52px !important;
+  height:52px !important;
+  flex:0 0 52px !important;
+  margin-right:14px !important;
+  border-radius:17px !important;
+  box-sizing:border-box !important;
+}
+
+/* Same typography */
+.accTitle b,
+.dailyTitle b,
+.futureAccordionHead .faHead b{
+  font-size:19px !important;
+  line-height:1.2 !important;
+}
+.accTitle span,
+.dailyTitle span,
+.futureAccordionHead .faHead span{
+  margin-top:3px !important;
+  font-size:13px !important;
+  line-height:1.35 !important;
+}
+
+/* Same chevron footprint */
+.chev,
+.dailyChevron,
+.futureAccordionChevron{
+  width:42px !important;
+  height:42px !important;
+  flex:0 0 42px !important;
+  box-sizing:border-box !important;
+  display:grid !important;
+  place-items:center !important;
+  padding:0 !important;
+  margin-left:auto !important;
+  font-size:22px !important;
+  color:#31433b !important;
+}
+
+/* Critical: closed normal accordions must not reserve body height */
+.accBody{
+  display:block !important;
+  height:0 !important;
+  max-height:0 !important;
+  min-height:0 !important;
+  padding:0 15px !important;
+  margin:0 !important;
+  overflow:hidden !important;
+  opacity:0 !important;
+  transform:translateY(-4px) !important;
+  transition:
+    max-height .38s cubic-bezier(.22,1,.36,1),
+    height .38s cubic-bezier(.22,1,.36,1),
+    opacity .24s ease,
+    transform .38s cubic-bezier(.22,1,.36,1),
+    padding .38s cubic-bezier(.22,1,.36,1) !important;
+}
+.acc.open .accBody{
+  height:auto !important;
+  max-height:5000px !important;
+  padding:0 15px 17px !important;
+  opacity:1 !important;
+  transform:none !important;
+}
+
+@media(max-width:600px){
+  /* Match Dagens forbrug's preferred mobile proportions exactly */
+  .accHead,
+  .dailyHead,
+  .futureAccordionHead{
+    min-height:74px !important;
+    height:74px !important;
+    padding:11px !important;
+  }
+  .accIcon,
+  .dailyIcon,
+  .futureAccordionHead .faIcon{
+    width:47px !important;
+    height:47px !important;
+    flex-basis:47px !important;
+    margin-right:11px !important;
+    border-radius:15px !important;
+  }
+  .accTitle b,
+  .dailyTitle b,
+  .futureAccordionHead .faHead b{font-size:17px !important;}
+  .accTitle span,
+  .dailyTitle span,
+  .futureAccordionHead .faHead span{font-size:11px !important;}
+  .chev,
+  .dailyChevron,
+  .futureAccordionChevron{width:38px !important;height:38px !important;flex-basis:38px !important;font-size:20px !important;}
+}
+</style>
+
+
+<style id="extraordinary-expense-ui">
+.extraordinaryToggle{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  margin-top:9px;
+  padding:10px 12px;
+  border:1px solid #dbe5df;
+  border-radius:12px;
+  background:rgba(248,250,249,.72);
+  cursor:pointer;
+  user-select:none;
+}
+.extraordinaryToggle input{position:absolute;opacity:0;pointer-events:none}
+.extraordinarySwitch{
+  position:relative;
+  flex:0 0 38px;
+  width:38px;
+  height:22px;
+  border-radius:999px;
+  background:#d5ddd8;
+  transition:background .22s ease;
+}
+.extraordinarySwitch:after{
+  content:"";
+  position:absolute;
+  width:16px;
+  height:16px;
+  left:3px;
+  top:3px;
+  border-radius:50%;
+  background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.16);
+  transition:transform .22s cubic-bezier(.22,1,.36,1);
+}
+.extraordinaryToggle input:checked + .extraordinarySwitch{background:#2f6b55}
+.extraordinaryToggle input:checked + .extraordinarySwitch:after{transform:translateX(16px)}
+.extraordinaryText{display:flex;flex-direction:column;gap:2px;line-height:1.25}
+.extraordinaryText b{font-size:13px;color:#34433c}
+.extraordinaryText small{font-size:10.5px;color:#7b8780}
+.extraordinaryBadge{
+  display:inline-flex;
+  margin-left:5px;
+  padding:2px 6px;
+  border-radius:999px;
+  background:#eef4f0;
+  color:#47715d;
+  font-size:9px;
+  font-weight:800;
+  vertical-align:1px;
+}
+</style>
+
+
+<style id="forecast-category-css">.forecastCats{margin:4px 0 8px;padding:8px 10px;background:#f7faf8;border:1px solid #edf1ee;border-radius:12px}.forecastCats div{display:flex;justify-content:space-between;font-size:10px;padding:4px 0;color:#64736b}.forecastCats b{color:#405249;font-weight:800}</style>
+<style>
+.profilePill{max-width:100%;white-space:normal;line-height:1.25}
+.mbProfileImpact{margin-top:12px;padding:11px 12px;border-radius:12px;background:rgba(43,155,115,.07);border:1px solid rgba(43,155,115,.18);font-size:12px;color:#90a099;line-height:1.45}
+.mbProfileImpact b{color:#d8e4de}
+</style>
 </head>
 
 <body>
@@ -1376,6 +1738,14 @@ onclick="addExpense()">
 </select>
 <input id="dailyDate" class="dailyDate" type="date">
 </div>
+<label class="extraordinaryToggle" for="dailyExtraordinary">
+  <input id="dailyExtraordinary" type="checkbox">
+  <span class="extraordinarySwitch" aria-hidden="true"></span>
+  <span class="extraordinaryText">
+    <b>Ekstraordinær udgift</b>
+    <small>Engangskøb som påvirker dit rådighedsbeløb, men ikke dit normale forbrugsbudget.</small>
+  </span>
+</label>
 <button type="button" class="dailyAdd" onclick="addDailyExpense()">+ Tilføj udgift</button>
 <div class="dailyHint">Faste udgifter er allerede med i dit budget — registrér kun variable køb her.</div>
 <div id="dailyCurrentList"></div>
@@ -1427,372 +1797,12 @@ oninput="updateBudget()">
 </div>
 
 
-<!-- SKAT -->
-<div class="acc">
-
-<button type="button"
-class="accHead accordion-toggle"
-onclick="toggleAcc(this)">
-
-<div class="accIcon ip">%</div>
-
-<div class="accTitle">
-<b style="color:#70519f">Skat & fradrag</b>
-<span style="color:#8067a5">
-Se hvad dine fradrag betyder for skatten
-</span>
-</div>
-
-<div class="chev">⌄</div>
-
-</button>
-
-
-<div class="accBody">
-
-<div class="tax">
-
-
-<!-- ARBEJDSINDKOMST -->
-<div class="taxSec">
-
-<div class="taxTitle">
-Arbejdsindkomst & automatiske fradrag
-</div>
-
-<p class="desc">
-Beskæftigelses- og jobfradrag beregnes automatisk ud fra din arbejdsindkomst.
-</p>
-
-<div class="taxRow">
-
-<div class="taxLabel">
-Årlig arbejdsindkomst før skat
-</div>
-
-<input
-id="annualIncome"
-type="text"
-inputmode="decimal"
-placeholder="0"
-oninput="updateTax()">
-
-<button
-class="q"
-type="button"
-onclick="showInfo(
-'Årlig arbejdsindkomst',
-'Indtast din forventede AM-bidragspligtige arbejdsindkomst før skat. SU skal normalt ikke indgå som arbejdsindkomst i denne beregning.'
-)">
-?
-</button>
-
-</div>
-
-
-<div class="auto">
-
-<div class="autoHead">
-Automatiske fradrag – 2026
-</div>
-
-<div class="autoRow">
-<span>Beskæftigelsesfradrag</span>
-<span id="employment">0 kr.</span>
-</div>
-
-<div class="autoRow">
-<span>Jobfradrag</span>
-<span id="job">0 kr.</span>
-</div>
-
-<div class="autoRow autoTotal">
-<span>Automatiske fradrag i alt</span>
-<span id="autoTotal">0 kr.</span>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- LIGNING -->
-<div class="taxSec">
-
-<div class="taxTitle">
-Ligningsmæssige fradrag
-</div>
-
-<p class="desc">
-Indtast det årlige fradragsbeløb.
-</p>
-
-
-<div class="auto" style="padding:12px;margin-bottom:10px">
-
-<div class="autoHead" style="padding:2px 0 9px">
-Befordring – beregn automatisk
-</div>
-
-
-<div class="taxRow">
-
-<div class="taxLabel">
-Km tur/retur pr. arbejdsdag
-</div>
-
-<input
-id="transportKm"
-type="text"
-inputmode="decimal"
-placeholder="Fx. 48"
-oninput="updateTax()">
-
-<button
-class="q"
-type="button"
-onclick="showInfo(
-'Befordringsfradrag',
-'SKAT beregner ud fra den reelle kørselsafstand pr. dag. De første 24 km pr. dag giver ikke fradrag.'
-)">
-?
-</button>
-
-</div>
-
-
-<div class="taxRow">
-
-<div class="taxLabel">
-Arbejdsdage med transport / år
-</div>
-
-<input
-id="transportDays"
-type="text"
-inputmode="decimal"
-placeholder="Fx. 45"
-oninput="updateTax()">
-
-</div>
-
-
-<div class="taxRow">
-
-<div class="taxLabel">
-Yderkommune / relevant lille ø
-</div>
-
-<select
-id="transportSpecial"
-onchange="updateTax()">
-
-<option value="no">Nej</option>
-<option value="yes">Ja</option>
-
-</select>
-
-</div>
-
-
-<div class="autoRow autoTotal">
-<span>Beregnet befordringsfradrag</span>
-<span id="transportCalculated">0 kr.</span>
-</div>
-
-<div class="autoRow">
-<span>Vejledende skattebesparelse</span>
-<span id="transportTaxSaving">0 kr./md.</span>
-</div>
-
-</div>
-
-
-<input id="transport" type="hidden" value="0">
-
-
-<div class="taxRow">
-
-<div class="taxLabel">
-Fagforening
-</div>
-
-<input
-id="union"
-type="text"
-inputmode="decimal"
-placeholder="0"
-oninput="updateTax()">
-
-<button
-class="q"
-type="button"
-onclick="showInfo(
-'Fagforening',
-'I 2026 er det maksimale fradrag for fagforeningskontingent 7.000 kr. årligt.'
-)">
-?
-</button>
-
-</div>
-
-
-<div class="taxRow">
-
-<div class="taxLabel">
-A-kasse / efterløn / fleksydelse
-</div>
-
-<input
-id="akasse"
-type="text"
-inputmode="decimal"
-placeholder="0"
-oninput="updateTax()">
-
-<button
-class="q"
-type="button"
-onclick="showInfo(
-'A-kasse',
-'Kontingent til A-kasse samt relevante bidrag kan være fradragsberettiget.'
-)">
-?
-</button>
-
-</div>
-
-
-<div class="taxRow">
-
-<div class="taxLabel">
-Øvrige lønmodtagerudgifter
-</div>
-
-<input
-id="work"
-type="text"
-inputmode="decimal"
-placeholder="0"
-oninput="updateTax()">
-
-<button
-class="q"
-type="button"
-onclick="showInfo(
-'Øvrige lønmodtagerudgifter',
-'Visse nødvendige arbejdsudgifter kan give fradrag.'
-)">
-?
-</button>
-
-</div>
-
-
-<div class="auto">
-
-<div class="autoHead">
-Ligningsmæssige fradrag
-</div>
-
-<div class="autoRow">
-<span>Samlet fradragsberettiget beløb</span>
-<span id="ligningTotal">0 kr.</span>
-</div>
-
-<div class="autoRow autoTotal">
-<span>Vejledende skattebesparelse / md.</span>
-<span id="ligningTaxSaving">0 kr.</span>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- LÅN -->
-<div class="taxSec">
-
-<div class="taxTitle">
-Mine lån & gæld
-</div>
-
-<p class="desc">
-Indtast restgæld og årlig rente. Appen viser renteudgiften og et vejledende estimat for skattebesparelsen.
-</p>
-
-<div id="loanList"></div>
-
-<button
-type="button"
-class="add"
-onclick="addLoan()">
-+ Tilføj lån eller gæld
-</button>
-
-</div>
-
-
-<div class="taxSummary">
-
-<div>
-<small>Automatiske fradrag</small>
-<strong id="autoSummary">0 kr.</strong>
-</div>
-
-<div>
-<small>Ligningsmæssige fradrag</small>
-<strong id="ligningSummary">0 kr.</strong>
-</div>
-
-</div>
-
-
-<div class="taxSummary">
-
-<div>
-<small>Renteudgifter / år</small>
-<strong id="interestTotal">0 kr.</strong>
-</div>
-
-<div>
-<small>Skattebesparelse / md.*</small>
-<strong id="interestTaxSaving">0 kr.</strong>
-</div>
-
-</div>
-
-
-<p class="note">
-* Skattebesparelsen på renter er et vejledende estimat.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- INFO -->
-<div class="info">
-
-<div class="infoI">i</div>
-
-<div>
-<b>Hjælp til fradrag</b>
-<span>Tryk på ? ved de enkelte poster for en enkel forklaring.</span>
-</div>
-
-</div>
-
-
 <!-- FOOTER -->
 <div class="foot">
 
 <div>
 Tal og skattesatser er baseret på offentligt tilgængelige oplysninger fra
-Skattestyrelsen og Skatteministeriet for 2026.
+Skattestyrelsen og Skatteministeriet for 2026.<br>Forbrugsreferencer i prognosen er baseret på Danmarks Statistiks Forbrugsundersøgelse 2024 (Statistikbanken/FU13).
 </div>
 
 <div style="margin-top:8px;">
@@ -2316,10 +2326,12 @@ function addDailyExpense(){
  var amount=n(document.getElementById("dailyAmount").value);
  var category=document.getElementById("dailyCategory").value;
  var date=document.getElementById("dailyDate").value||todayDateString();
+ var extraordinary=!!document.getElementById("dailyExtraordinary")?.checked;
  if(!name||amount<=0){alert("Skriv hvad du har købt og indtast et beløb.");return;}
- dailyExpenses.push({id:Date.now(),name:name,amount:amount,category:category,date:date});
+ dailyExpenses.push({id:Date.now(),name:name,amount:amount,category:category,date:date,extraordinary:extraordinary});
  document.getElementById("dailyName").value="";
  document.getElementById("dailyAmount").value="";
+ var extraToggle=document.getElementById("dailyExtraordinary"); if(extraToggle)extraToggle.checked=false;
  save();renderDailyExpenses();updateBudget();
 }
 function removeDailyExpense(id){
@@ -2349,7 +2361,7 @@ function renderDailyExpenses(){
   host.innerHTML=dates.map(function(date){
    var arr=groups[date],total=arr.reduce(function(s,x){return s+n(x.amount);},0);
    return '<div class="dailyDay"><div class="dailyDayHead"><span>'+escapeHtml(dailyDayLabel(date))+'</span><span class="dailyDayTotal">'+fmt(total)+' kr.</span></div>'+
-   arr.map(function(x){return '<div class="dailyEntry"><div><div class="dailyEntryName">'+escapeHtml(x.name)+'</div><div class="dailyEntrySub">'+escapeHtml(x.category)+'</div></div><div class="dailyEntryAmount">'+fmt(x.amount)+' kr.</div><button type="button" class="dailyDelete" onclick="removeDailyExpense('+JSON.stringify(x.id)+')">×</button></div>';}).join("")+
+   arr.map(function(x){return '<div class="dailyEntry"><div><div class="dailyEntryName">'+escapeHtml(x.name)+'</div><div class="dailyEntrySub">'+escapeHtml(x.category)+(x.extraordinary?' <span class="extraordinaryBadge">Ekstraordinær</span>':'')+'</div></div><div class="dailyEntryAmount">'+fmt(x.amount)+' kr.</div><button type="button" class="dailyDelete" onclick="removeDailyExpense('+JSON.stringify(x.id)+')">×</button></div>';}).join("")+
    '</div>';
   }).join("");
  }
@@ -3751,6 +3763,615 @@ document.body.classList.add("mbIntroRunning");
   window.editExpenseAmount=function(i,v){expenses[i].amount=n(v);save();refreshInsuranceBudget();};
   document.addEventListener("DOMContentLoaded",function(){renderInsurance();setTimeout(refreshInsuranceBudget,50);});
   renderInsurance();setTimeout(refreshInsuranceBudget,60);
+})();
+</script>
+
+
+<style id="future-simulator-addon">
+/* Mit Budget – intelligent prognose + Hvad hvis? */
+.futureAddon{margin-top:14px}
+.futureCard,.whatIfCard{background:rgba(255,255,255,.96);border:1px solid rgba(20,63,49,.09);border-radius:22px;padding:16px;margin:14px 0;box-shadow:0 10px 28px rgba(20,63,49,.06)}
+.faHead{display:flex;align-items:center;gap:11px;margin-bottom:12px}.faIcon{width:42px;height:42px;border-radius:14px;background:#e5f2ea;color:#123f31;display:grid;place-items:center;font-weight:900;font-size:19px}.faHead b{display:block;font-size:15px}.faHead span{display:block;font-size:11px;color:#718077;margin-top:2px}
+.forecastBig{padding:13px;border-radius:16px;background:linear-gradient(135deg,#e5f3eb,#f7faf8);border:1px solid #d7e9df}.forecastBig small{font-size:9px;color:#6c7e74;font-weight:800;letter-spacing:.08em}.forecastBig strong{display:block;font-size:25px;color:#123f31;margin:4px 0}.forecastBig span{font-size:10px;color:#63746a}
+.forecastList{margin-top:8px}.forecastRow{display:grid;grid-template-columns:50px 1fr auto;gap:9px;align-items:center;padding:9px 0;border-bottom:1px solid #edf1ee}.forecastRow:last-child{border:0}.forecastDate{font-size:9px;font-weight:800;background:#e7f1eb;color:#123f31;border-radius:9px;padding:6px;text-align:center}.forecastText b{font-size:11px}.forecastText small{display:block;color:#7b8881;font-size:9px;margin-top:2px}.forecastAmt{font-size:11px;font-weight:800}.forecastAmt.neg{color:#a94442}.forecastAmt.pos{color:#1d644b}
+.forecastInsight{margin-top:9px;padding:10px;border-radius:11px;background:#edf6f0;border-left:3px solid #4b9270;font-size:10px;line-height:1.45;color:#53675d}.forecastMeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.forecastPill{font-size:9px;padding:6px 8px;border-radius:999px;background:#f0f5f2;color:#5d7066;font-weight:700}
+.whatTabs{display:flex;background:#edf2ee;border-radius:11px;padding:3px;margin:10px 0}.whatTabs button{flex:1;border:0;background:transparent;padding:8px 3px;border-radius:8px;font-size:9px;color:#6e7d74;font-weight:800}.whatTabs button.active{background:#fff;color:#123f31;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.whatForm label{display:block;font-size:9px;font-weight:800;color:#66766d;margin:8px 0 4px}.whatForm input,.whatForm select{width:100%;height:39px;border:1px solid #dce6e0;border-radius:10px;padding:0 10px;background:#fff;font:inherit;font-size:12px}.whatRow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.simResult{margin-top:12px;padding:12px;border:1px solid #dfe8e2;border-radius:15px}.simResultTitle{font-size:9px;color:#7b8881;font-weight:800}.simCompare{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:7px}.simNum small{display:block;font-size:8px;color:#829087}.simNum b{font-size:19px;color:#123f31}.simArrow{color:#a3afa8}.simImpact{display:flex;justify-content:space-between;border-top:1px solid #e7ece8;margin-top:9px;padding-top:9px;font-size:10px}.simImpact b{color:#a94442}.extraHint{font-size:9px;color:#718077;line-height:1.35;margin-top:6px}
+</style>
+
+<script id="mitbudget-profile-engine">
+/*
+ Mit Budget – DST reference engine
+ Sources:
+ - FU13: Consumption by consumption group and household type
+ - FU18: Consumption by consumption group and age
+ - Latest available year is discovered dynamically through TABLEINFO.
+ Principle:
+   1. User's own normal spending history always has priority.
+   2. If history is missing, use the most specific DIRECT official reference available.
+   3. Household profile -> matching FU13 segment.
+   4. If no household segment is available, age profile -> matching FU18 segment.
+   5. No invented multipliers. "Car" is NOT used until a directly relevant official dataset exists.
+*/
+window.MitBudgetProfileEngine=(function(){
+ const KEY='mitbudget_profile_v1';
+ const CACHE='mitbudget_dst_fu_cache_v2';
+ const defaults={household:'',adults:1,children:0,age:'',car:''};
+
+ // Official 2024 FU13 fallback values, DKK per household per year.
+ // These are the broad categories published by Statistics Denmark.
+ const FU13_FALLBACK={
+  'Enlige under 60 år uden børn':{
+   'Fødevarer og ikke-alkoholiske drikkevarer':21736,'Beklædning og fodtøj':7076,
+   'Bolig-, og husholdningstjenester mv.':10749,'Sundhed':5561,'Transport':27737,
+   'Information og kommunikation':9942,'Fritid, sport og kultur':15739,
+   'Restauranter og hoteller':15367,'Personlig pleje samt diverse varer og tjenester':8359
+  },
+  'Enlig 60 år og derover uden børn':{
+   'Fødevarer og ikke-alkoholiske drikkevarer':24848,'Beklædning og fodtøj':5617,
+   'Bolig-, og husholdningstjenester mv.':10162,'Sundhed':8367,'Transport':23856,
+   'Information og kommunikation':10420,'Fritid, sport og kultur':18347,
+   'Restauranter og hoteller':12718,'Personlig pleje samt diverse varer og tjenester':6415
+  },
+  'Enlige med børn':{
+   'Fødevarer og ikke-alkoholiske drikkevarer':38564,'Beklædning og fodtøj':14061,
+   'Bolig-, og husholdningstjenester mv.':30435,'Sundhed':11371,'Transport':26705,
+   'Information og kommunikation':25753,'Fritid, sport og kultur':21349,
+   'Restauranter og hoteller':21997,'Personlig pleje samt diverse varer og tjenester':15753
+  },
+  '2 voksne, hp under 60 år uden børn':{
+   'Fødevarer og ikke-alkoholiske drikkevarer':41730,'Beklædning og fodtøj':13355,
+   'Bolig-, og husholdningstjenester mv.':18458,'Sundhed':7663,'Transport':61911,
+   'Information og kommunikation':15922,'Fritid, sport og kultur':28090,
+   'Restauranter og hoteller':35800,'Personlig pleje samt diverse varer og tjenester':10149
+  },
+  '2 voksne, hp 60 år og derover uden børn':{
+   'Fødevarer og ikke-alkoholiske drikkevarer':52888,'Beklædning og fodtøj':15177,
+   'Bolig-, og husholdningstjenester mv.':26182,'Sundhed':20601,'Transport':72683,
+   'Information og kommunikation':17440,'Fritid, sport og kultur':44464,
+   'Restauranter og hoteller':35083,'Personlig pleje samt diverse varer og tjenester':11119
+  },
+  '2 voksne med børn':{
+   'Fødevarer og ikke-alkoholiske drikkevarer':65775,'Beklædning og fodtøj':19820,
+   'Bolig-, og husholdningstjenester mv.':25632,'Sundhed':11425,'Transport':75006,
+   'Information og kommunikation':17286,'Fritid, sport og kultur':47817,
+   'Restauranter og hoteller':44305,'Personlig pleje samt diverse varer og tjenester':38514
+  },
+  'Husstande med mindst 3 voksne':{
+   'Fødevarer og ikke-alkoholiske drikkevarer':71437,'Beklædning og fodtøj':17647,
+   'Bolig-, og husholdningstjenester mv.':22302,'Sundhed':13340,'Transport':111735,
+   'Information og kommunikation':21795,'Fritid, sport og kultur':55418,
+   'Restauranter og hoteller':41670,'Personlig pleje samt diverse varer og tjenester':15754
+  },
+  'Hele landet':{
+   'Fødevarer og ikke-alkoholiske drikkevarer':41851,'Beklædning og fodtøj':12066,
+   'Bolig-, og husholdningstjenester mv.':18222,'Sundhed':10666,'Transport':53360,
+   'Information og kommunikation':14868,'Fritid, sport og kultur':31193,
+   'Restauranter og hoteller':27661,'Personlig pleje samt diverse varer og tjenester':14159
+  }
+ };
+
+ const APP_TO_DST={
+  'Dagligvarer':'Fødevarer og ikke-alkoholiske drikkevarer',
+  'Restaurant & Takeaway':'Restauranter og hoteller',
+  'Shopping':'Beklædning og fodtøj',
+  'Transport':'Transport',
+  'Fritid':'Fritid, sport og kultur',
+  'Underholdning':'Fritid, sport og kultur',
+  'Sundhed':'Sundhed',
+  'Personlig pleje':'Personlig pleje samt diverse varer og tjenester',
+  'Bolig & Husholdning':'Bolig-, og husholdningstjenester mv.'
+ };
+
+ let live={fu13:null,fu18:null,updated:null,loading:null};
+
+ function get(){
+  try{
+   const p={...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')};
+   if(!p.household)p.household=p.children>0?'family':p.adults>1?'couple':'alone';
+   if(p.household==='alone'){p.adults=1;p.children=0}
+   if(p.household==='couple'){p.adults=2;p.children=0}
+   if(p.household==='family'){p.adults=Math.max(1,+p.adults||1);p.children=Math.max(1,+p.children||1)}
+   return p;
+  }catch(e){return {...defaults}}
+ }
+
+ function ageFU18(p=get()){
+  const a=p.age||'';
+  if(a==='Under 30')return 'Under 30 år';
+  if(a==='30–44')return '30-44 år';
+  if(a==='45–59')return '45-59 år';
+  if(a==='60–74')return '60-74 år';
+  if(a==='75+')return '75 år og derover';
+  return null;
+ }
+
+ function householdFU13(p=get()){
+  const age60=['60–74','75+'].includes(p.age);
+  if(p.children>0){
+   if(p.adults<=1)return 'Enlige med børn';
+   if(p.adults===2)return '2 voksne med børn';
+   return 'Husstande med mindst 3 voksne';
+  }
+  if(p.adults<=1)return age60?'Enlig 60 år og derover uden børn':'Enlige under 60 år uden børn';
+  if(p.adults===2)return age60?'2 voksne, hp 60 år og derover uden børn':'2 voksne, hp under 60 år uden børn';
+  return 'Husstande med mindst 3 voksne';
+ }
+
+ function normalize(s){
+  return String(s||'').toLowerCase().replace(/[–—]/g,'-').replace(/\s+/g,' ').trim();
+ }
+ function findKey(obj,label){
+  const target=normalize(label);
+  return Object.keys(obj||{}).find(k=>normalize(k)===target) ||
+   Object.keys(obj||{}).find(k=>normalize(k).includes(target)||target.includes(normalize(k)));
+ }
+
+ async function api(path,body){
+  const r=await fetch('https://api.statbank.dk/v1/'+path,{
+   method:'POST',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify(body)
+  });
+  if(!r.ok)throw new Error('DST API '+r.status);
+  return path==='data'?await r.text():await r.json();
+ }
+
+ function parseCSV(text){
+  const lines=text.replace(/^\uFEFF/,'').trim().split(/\r?\n/);
+  if(!lines.length)return [];
+  const parseLine=line=>{
+   const out=[];let cur='',q=false;
+   for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(c==='"'){if(q&&line[i+1]==='"'){cur+='"';i++}else q=!q}
+    else if(c===';'&&!q){out.push(cur);cur=''}else cur+=c;
+   }out.push(cur);return out;
+  };
+  const head=parseLine(lines.shift());
+  return lines.filter(Boolean).map(line=>{
+   const vals=parseLine(line),o={};head.forEach((h,i)=>o[h]=vals[i]);return o;
+  });
+ }
+
+ async function loadTable(table){
+  const info=await api('tableinfo',{table,lang:'da'});
+  const vars=info.variables||[];
+  const timeVar=vars.find(v=>v.time)||vars.find(v=>/tid|år/i.test(v.text));
+  const latest=(timeVar?.values||[]).map(v=>String(v.id)).filter(v=>/^\d{4}$/.test(v)).sort().pop()||'*';
+  const body={
+   table,format:'CSV',lang:'da',valuePresentation:'CodeAndValue',
+   variables:vars.map(v=>({code:v.id,values:v.time?[latest]:['*']}))
+  };
+  const csv=await api('data',body);
+  const rows=parseCSV(csv);
+  return {year:latest,rows,info};
+ }
+
+ function indexRows(pack,segmentText){
+  if(!pack)return null;
+  const vars=pack.info.variables||[];
+  const segVar=vars.find(v=>normalize(v.text)===normalize(segmentText))||vars.find(v=>normalize(v.text).includes(normalize(segmentText)));
+  const consVar=vars.find(v=>normalize(v.text).includes('forbrugsgruppe'));
+  if(!segVar||!consVar)return null;
+  const segCol=Object.keys(pack.rows[0]||{}).find(k=>normalize(k).includes(normalize(segVar.text)));
+  const consCol=Object.keys(pack.rows[0]||{}).find(k=>normalize(k).includes('forbrugsgruppe'));
+  const valCol=Object.keys(pack.rows[0]||{}).find(k=>/indhold/i.test(k));
+  if(!segCol||!consCol||!valCol)return null;
+  const out={};
+  for(const r of pack.rows){
+   const seg=String(r[segCol]||'').replace(/^[^:]*:\s*/,'').trim();
+   const cons=String(r[consCol]||'').replace(/^[^:]*:\s*/,'').trim();
+   const n=parseFloat(String(r[valCol]||'').replace(/\./g,'').replace(',','.').replace(/[^0-9.-]/g,''));
+   if(seg&&cons&&Number.isFinite(n)){(out[seg]||(out[seg]={}))[cons]=n}
+  }
+  return out;
+ }
+
+ async function load(){
+  if(live.loading)return live.loading;
+  live.loading=(async()=>{
+   try{
+    const cached=JSON.parse(localStorage.getItem(CACHE)||'null');
+    const fresh=cached&&cached.updated&&(Date.now()-new Date(cached.updated).getTime()<1000*60*60*24*30);
+    if(fresh){
+     live.fu13=cached.fu13;live.fu18=cached.fu18;live.updated=cached.updated;
+     notify();return;
+    }
+    const [a,b]=await Promise.all([loadTable('FU13'),loadTable('FU18')]);
+    live.fu13=indexRows(a,'husstand');
+    live.fu18=indexRows(b,'alder');
+    live.updated=new Date().toISOString();
+    localStorage.setItem(CACHE,JSON.stringify({fu13:live.fu13,fu18:live.fu18,updated:live.updated}));
+    notify();
+   }catch(err){
+    console.warn('Kunne ikke hente segmenteret DST-data. Bruger verificeret FU13 2024 fallback.',err);
+   }finally{live.loading=null}
+  })();
+  return live.loading;
+ }
+
+ function directReference(category,p=get()){
+  const dstCat=APP_TO_DST[category];
+  if(!dstCat)return {value:null,source:null};
+
+  // First choice: exact official FU13 household segment.
+  const hh=householdFU13(p);
+  const fu13Seg=findKey(live.fu13,hh);
+  const fu13Cat=fu13Seg&&findKey(live.fu13[fu13Seg],dstCat);
+  if(fu13Cat)return {value:live.fu13[fu13Seg][fu13Cat],source:'FU13 · '+fu13Seg};
+
+  // Verified embedded FU13 2024 fallback.
+  const fallback=FU13_FALLBACK[hh]||FU13_FALLBACK['Hele landet'];
+  if(fallback&&fallback[dstCat])return {value:fallback[dstCat],source:'FU13 2024 · '+hh};
+
+  // Second choice: direct official FU18 age segment, only if household data unavailable.
+  const age=ageFU18(p);
+  const fu18Seg=age&&findKey(live.fu18,age);
+  const fu18Cat=fu18Seg&&findKey(live.fu18[fu18Seg],dstCat);
+  if(fu18Cat)return {value:live.fu18[fu18Seg][fu18Cat],source:'FU18 · '+fu18Seg};
+
+  return {value:null,source:null};
+ }
+
+ // Keeps compatibility with existing forecast code.
+ function categoryMultiplier(category){
+  const general=directReference(category,{...get(),household:'alone',adults:1,children:0,age:'',car:''}).value;
+  const selected=directReference(category,get()).value;
+  if(!selected)return 1;
+  // Existing forecast expects a multiplier. This ratio is derived exclusively
+  // from two direct official DST references, not invented coefficients.
+  const whole=FU13_FALLBACK['Hele landet'][APP_TO_DST[category]];
+  return whole?selected/whole:1;
+ }
+
+ function summary(p=get()){
+  const parts=[];
+  parts.push(householdFU13(p));
+  if(ageFU18(p))parts.push(ageFU18(p));
+  if(p.car)parts.push(p.car==='yes'?'Bil: ikke brugt i DST-estimat endnu':'Ingen bil');
+  return parts.join(' · ');
+ }
+
+ function notify(){window.dispatchEvent(new CustomEvent('mitbudget-profile-updated',{detail:get()}))}
+ setTimeout(load,0);
+
+ return {get,load,directReference,categoryMultiplier,householdFU13,ageFU18,summary,notify,APP_TO_DST};
+})();
+</script>
+
+<script id="future-simulator-addon-script">
+(function(){
+ const fmt=n=>Math.round(Number(n)||0).toLocaleString('da-DK')+' kr.';
+ const money=n=>Math.round(Number(n)||0);
+ const DAY=86400000;
+ const monthKey=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+ const todayKey=()=>{const d=new Date();return `${monthKey(d)}-${String(d.getDate()).padStart(2,'0')}`};
+ const daysInMonth=(y,m)=>new Date(y,m+1,0).getDate();
+ const median=a=>{const x=a.filter(Number.isFinite).slice().sort((a,b)=>a-b);if(!x.length)return 0;const m=Math.floor(x.length/2);return x.length%2?x[m]:(x[m-1]+x[m])/2};
+ const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+ const amount=x=>Number(x?.amount)||0;
+ const isNormal=x=>!x?.extraordinary;
+ function appData(){return{daily:Array.isArray(window.dailyExpenses)?window.dailyExpenses:[],incomes:Array.isArray(window.incomes)?window.incomes:[],expenses:Array.isArray(window.expenses)?window.expenses:[],investment:Number(document.getElementById('investment')?.value)||0};}
+ function insuranceThisMonth(){try{return typeof window.actualInsuranceThisMonth==='function'?Number(window.actualInsuranceThisMonth())||0:0}catch(e){return 0}}
+ // Faste poster holdes helt adskilt fra det variable forbrug. Forecast-motoren lærer KUN af Dagens forbrug.
+ function currentBase(d){return d.incomes.reduce((s,x)=>s+amount(x),0)-d.expenses.reduce((s,x)=>s+amount(x),0)-insuranceThisMonth()-d.investment}
+ const CAT={
+  'Dagligvare':'Dagligvarer','Restaurant & Takeaway':'Restaurant & Takeaway','Shopping':'Shopping','Transport':'Transport','Fritid':'Fritid','Underholdning':'Underholdning','Sundhed':'Sundhed','Personlig pleje':'Personlig pleje','Bolig & Husholdning':'Bolig & Husholdning','Gaver':'Gaver','Andet':'Andet'
+ };
+ // DST 2024: årligt gennemsnit pr. husstand. Bruges kun som forsigtig reference/fallback og aldrig som "sandhed".
+ // Kilde: Danmarks Statistik, Forbrugsundersøgelsen 2024 / FU13 (offentliggjort 26.02.2026).
+ const DST_MONTHLY={
+  'Dagligvarer':41851/12,
+  'Restaurant & Takeaway':27661/12,
+  'Shopping':12066/12,
+  'Transport':53360/12,
+  'Fritid':31193/12,
+  'Underholdning':31193/12,
+  'Sundhed':10666/12,
+  'Personlig pleje':14159/12,
+  'Bolig & Husholdning':18222/12,
+  'Gaver':0,
+  'Andet':14159/12
+ };
+ function catOf(x){return CAT[x?.category]||x?.category||'Andet'}
+ function historicalCategoryRates(d,current){
+   const out={};
+   for(let offset=1;offset<=6;offset++){
+     const dt=new Date(current.getFullYear(),current.getMonth()-offset,1), key=monthKey(dt), dim=daysInMonth(dt.getFullYear(),dt.getMonth());
+     d.daily.filter(x=>String(x.date||'').slice(0,7)===key&&isNormal(x)).forEach(x=>{
+       const c=catOf(x);(out[c]||(out[c]=[])).push({rate:amount(x)/dim,weight:7-offset,month:key});
+     });
+   }
+   // summer pr måned før robust vægtning
+   const merged={};Object.keys(out).forEach(c=>{const m={};out[c].forEach(r=>m[r.month]=(m[r.month]||0)+r.rate);merged[c]=Object.entries(m).map(([month,rate])=>({month,rate,weight:7-(Math.max(1,((current.getFullYear()*12+current.getMonth())-(+month.slice(0,4)*12+(+month.slice(5,7)-1))))) }));});
+   return merged;
+ }
+ function robustRate(rows){
+   if(!rows||!rows.length)return 0;const med=median(rows.map(x=>x.rate));const use=rows.filter(x=>x.rate<=Math.max(med*2.25,1)&&x.rate>=med*.30);const a=use.length?use:rows;const w=a.reduce((s,x)=>s+(x.weight||1),0)||1;return a.reduce((s,x)=>s+x.rate*(x.weight||1),0)/w;
+ }
+ function currentCategoryRates(items,day){
+   const out={};items.forEach(x=>{const c=catOf(x);(out[c]||(out[c]=[])).push(x)});
+   const r={};Object.keys(out).forEach(c=>{const total=out[c].reduce((s,x)=>s+amount(x),0);r[c]={rate:total/Math.max(1,day),count:out[c].length,total}});return r;
+ }
+ function calcForecast(){
+   const d=appData(),now=new Date();now.setHours(0,0,0,0);const key=monthKey(now),today=todayKey(),day=now.getDate(),totalDays=daysInMonth(now.getFullYear(),now.getMonth());
+   const monthItems=d.daily.filter(x=>String(x.date||'').slice(0,7)===key&&String(x.date||'')<=today);
+   const normalSoFar=monthItems.filter(isNormal),extraSoFar=monthItems.filter(x=>!!x.extraordinary);
+   const normalTotal=normalSoFar.reduce((s,x)=>s+amount(x),0),extraTotal=extraSoFar.reduce((s,x)=>s+amount(x),0);
+   const hist=historicalCategoryRates(d,now),current=currentCategoryRates(normalSoFar,day);
+   const cats=new Set([...Object.keys(DST_MONTHLY),...Object.keys(hist),...Object.keys(current)]);
+   const categoryForecast=[];let dailyRate=0,historyMonths=new Set(),activeDays=new Set(normalSoFar.map(x=>String(x.date||''))).size,usedDst=false;
+   cats.forEach(c=>{
+     const hr=robustRate(hist[c]);(hist[c]||[]).forEach(x=>historyMonths.add(x.month));
+     const cr=current[c]?.rate||0, cnt=current[c]?.count||0;
+     let rate=0,source='';
+     if(cr>0&&hr>0){const progress=day/totalDays, strength=clamp(cnt/5,0,1),cw=clamp(.18+progress*.42+strength*.18,.25,.82);rate=cr*cw+hr*(1-cw);source='personlig historik + denne måned'}
+     else if(hr>0){rate=hr;source='personlig historik'}
+     else if(cr>0){rate=cr;source='denne måned'}
+     // DST bruges kun som blød startreference, og kun når brugeren mangler data for kategorien.
+     // For at undgå et kunstigt højt forecast bruges højst 35 % af DST-reference, indtil "Fortæl om dig selv" giver husstandsprofil.
+     else if(!normalSoFar.length&&DST_MONTHLY[c]){
+       const profileFactor=window.MitBudgetProfileEngine?.categoryMultiplier(c)||1;
+       rate=(DST_MONTHLY[c]*profileFactor/totalDays)*.35;
+       source='profiltilpasset dansk reference';usedDst=true
+     }
+     if(rate>0){dailyRate+=rate;categoryForecast.push({category:c,rate,expected:rate*Math.max(0,totalDays-day),source})}
+   });
+   const daysRemaining=Math.max(0,totalDays-day),expected=money(dailyRate*daysRemaining),actualSpent=normalTotal+extraTotal;
+   const availableNow=money(currentBase(d)-actualSpent),future=money(availableNow-expected);
+   const historyCount=historyMonths.size,dataPoints=normalSoFar.length+Object.values(hist).reduce((s,a)=>s+a.length,0);
+   const confidence=dataPoints>=30&&historyCount>=3?'Høj':dataPoints>=12&&historyCount>=2?'God':dataPoints>=4?'Under opbygning':'Lærer stadig';
+   let basis='dine personlige data';if(!dataPoints&&usedDst)basis='en forsigtig dansk forbrugsreference';else if(historyCount&&activeDays)basis='din aktuelle rytme og tidligere måneder';else if(historyCount)basis='tidligere måneder';else if(activeDays)basis='dit registrerede normale forbrug';
+   return{availableNow,future,expected,dailyRate,daysRemaining,normalTotal,extraTotal,confidence,historyMonths:historyCount,activeDays,dataPoints,base:currentBase(d),basis,categoryForecast,usedDst};
+ }
+ function mount(){
+   if(document.getElementById('futureAddon'))return;
+   const host=document.querySelector('main.app')||document.querySelector('.app')||document.body,wrap=document.createElement('div');wrap.id='futureAddon';wrap.className='futureAddon';
+   wrap.innerHTML=`<section class="futureCard"><div class="faHead"><div class="faIcon">↗</div><div><b>Din økonomi fremad</b><span>Et realistisk kig på resten af måneden</span></div></div><div class="forecastBig"><small>FORVENTET RÅDIGHED VED MÅNEDENS SLUTNING</small><strong id="forecastValue">–</strong><span id="forecastSub">Beregner...</span></div><div class="forecastMeta" id="forecastMeta"></div><div class="forecastList" id="forecastList"></div><div class="forecastInsight" id="forecastInsight"></div></section><section class="whatIfCard"><div class="faHead"><div class="faIcon">◇</div><div><b>Hvad hvis?</b><span>Prøv en økonomisk beslutning før du tager den</span></div></div><div class="whatTabs"><button class="active" data-type="subscription">Fast udgift</button><button data-type="purchase">Køb</button><button data-type="loan">Lån</button></div><div class="whatForm" id="whatForm"></div><div class="simResult"><div class="simResultTitle">EFFEKT PÅ DIN ØKONOMI</div><div class="simCompare"><div class="simNum"><small>NU</small><b id="simNow">–</b></div><div class="simArrow">→</div><div class="simNum"><small>EFTER</small><b id="simAfter">–</b></div></div><div class="simImpact"><span id="impactLabel">Månedlig påvirkning</span><b id="simImpact">–</b></div></div><div class="forecastInsight" id="simInsight"></div><div class="extraHint">Dette er kun en simulering og ændrer ikke dit rigtige budget.</div></section>`;
+   const footer=host.querySelector(':scope > .foot');if(footer)host.insertBefore(wrap,footer);else host.appendChild(wrap);
+   function accordion(card){const original=card.querySelector('.faHead');if(!original)return;const head=document.createElement('button');head.type='button';head.className='futureAccordionHead';head.setAttribute('aria-expanded','false');head.appendChild(original);const chevron=document.createElement('span');chevron.className='futureAccordionChevron';chevron.textContent='⌄';head.appendChild(chevron);const body=document.createElement('div');body.className='futureAccordionBody';[...card.childNodes].forEach(n=>{if(n!==head&&n!==original)body.appendChild(n)});card.innerHTML='';card.append(head,body);body.hidden=true;head.onclick=()=>{const open=body.hidden;body.hidden=!open;card.classList.toggle('isOpen',open);head.setAttribute('aria-expanded',String(open))}}
+   accordion(wrap.querySelector('.futureCard'));accordion(wrap.querySelector('.whatIfCard'));
+   let type='subscription';
+   function form(){const el=document.getElementById('whatForm');if(type==='subscription')el.innerHTML=`<label>Hvad overvejer du?</label><input id="simName" value="Nyt abonnement"><div class="whatRow"><div><label>Pris pr. måned</label><input id="simPrice" type="number" value="299"></div><div><label>Starter</label><select id="simStart"><option>Nu</option><option>Næste måned</option></select></div></div>`;if(type==='purchase')el.innerHTML=`<label>Hvad overvejer du at købe?</label><input id="simName" value="Nyt køb"><label>Pris</label><input id="simPrice" type="number" value="5000"><label>Hvornår?</label><select id="simStart"><option>Denne måned</option><option>Næste måned</option><option>Om 3 måneder</option></select>`;if(type==='loan')el.innerHTML=`<label>Hvad overvejer du?</label><input id="simName" value="Nyt lån"><div class="whatRow"><div><label>Lånebeløb</label><input id="loanAmount" type="number" value="100000"></div><div><label>Årlig rente (%)</label><input id="loanRate" type="number" step="0.1" value="6.5"></div></div><div class="whatRow"><div><label>Løbetid (måneder)</label><input id="loanMonths" type="number" value="60"></div><div><label>Oprettelse</label><input id="loanFee" type="number" value="0"></div></div>`;el.querySelectorAll('input,select').forEach(x=>x.addEventListener('input',update));update()}
+   function update(){const f=calcForecast(),now=f.future;let impact=0,totalInfo='';if(type==='loan'){const P=Number(document.getElementById('loanAmount').value)||0,r=(Number(document.getElementById('loanRate').value)||0)/100/12,n=Math.max(1,Number(document.getElementById('loanMonths').value)||1),fee=Number(document.getElementById('loanFee').value)||0;impact=r===0?P/n:P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);const total=impact*n+fee,interest=total-P-fee;totalInfo=`Månedlig ydelse: ${fmt(impact)} · Samlede renter: ${fmt(Math.max(0,interest))}`}else impact=Number(document.getElementById('simPrice')?.value)||0;const start=document.getElementById('simStart')?.value||'Nu';const effective=((type==='purchase'&&start!=='Denne måned')||(type==='subscription'&&start==='Næste måned'))?0:impact;document.getElementById('simNow').textContent=fmt(now);document.getElementById('simAfter').textContent=fmt(now-effective);document.getElementById('impactLabel').textContent=type==='purchase'?'Påvirkning på valgt tidspunkt':'Månedlig påvirkning';document.getElementById('simImpact').textContent='−'+fmt(effective);const after=now-effective,msg=after>5000?'Det ser ud til, at din økonomi kan bære beslutningen.':after>2500?'Muligt, men det reducerer din økonomiske fleksibilitet mærkbart.':'Vær opmærksom: Beslutningen lægger et betydeligt pres på dit rådighedsbeløb.';document.getElementById('simInsight').textContent=msg+(totalInfo?' '+totalInfo:'')}
+   wrap.querySelectorAll('[data-type]').forEach(b=>b.onclick=()=>{type=b.dataset.type;wrap.querySelectorAll('[data-type]').forEach(x=>x.classList.toggle('active',x===b));form()});form();renderForecast();
+ }
+ function renderForecast(){
+   const f=calcForecast(),v=document.getElementById('forecastValue');if(!v)return;v.textContent=fmt(f.future);
+   document.getElementById('forecastSub').textContent=f.daysRemaining===0?'Måneden slutter i dag':`${f.daysRemaining} dage tilbage · bygger på ${f.basis}`;
+   const meta=document.getElementById('forecastMeta');
+   if(meta){
+     const profileText=window.MitBudgetProfileEngine?.summary?.()||'Generel reference';
+     meta.innerHTML=`<span class="forecastPill">Sikkerhed: ${f.confidence}</span><span class="forecastPill">${f.activeDays} aktive forbrugsdage</span>${f.historyMonths?`<span class="forecastPill">${f.historyMonths} måneders historik</span>`:''}${f.usedDst?'<span class="forecastPill">DST-reference</span>':''}<span class="forecastPill profilePill">Profil: ${profileText}</span>`;
+   }
+   const top=f.categoryForecast.sort((a,b)=>b.expected-a.expected).filter(x=>x.expected>0).slice(0,4);
+   const cats=top.length?`<div class="forecastCats">${top.map(x=>`<div><span>${x.category}</span><b>−${fmt(x.expected)}</b></div>`).join('')}</div>`:'';
+   const list=document.getElementById('forecastList');list.innerHTML=`<div class="forecastRow"><div class="forecastDate">NU</div><div class="forecastText"><b>Til rådighed lige nu</b><small>Faste poster holdes adskilt · profil vælger relevant DST-reference</small></div><div class="forecastAmt">${fmt(f.availableNow)}</div></div><div class="forecastRow"><div class="forecastDate">REST</div><div class="forecastText"><b>Forventet normalt forbrug</b><small>Kategoribaseret · ekstraordinære køb træner ikke prognosen</small></div><div class="forecastAmt neg">−${fmt(f.expected)}</div></div>${cats}<div class="forecastRow"><div class="forecastDate">SLUT</div><div class="forecastText"><b>Forventet rådighed</b><small>Ved månedens afslutning</small></div><div class="forecastAmt ${f.future<0?'neg':'pos'}">${fmt(f.future)}</div></div>`;
+   let insight;if(f.usedDst&&!f.dataPoints)insight='Du har endnu ikke nok personlige forbrugsdata. Derfor bruges en forsigtig reference fra Danmarks Statistiks Forbrugsundersøgelse som startpunkt. Den udfases automatisk, når appen lærer dine egne vaner.';else if(!f.dataPoints)insight='Prognosen lærer af dine normale variable køb. Faste udgifter behandles som faste, mens ekstraordinære køb påvirker din økonomi nu uden at forvrænge dit normale forbrugsmønster.';else insight=`Prognosen analyserer ${f.activeDays} aktive forbrugsdage og ${f.historyMonths||0} måneders historik på tværs af kategorier som dagligvarer, transport, shopping og fritid. Jo mere personlig historik, desto mindre betyder generelle referencer.`;
+   document.getElementById('forecastInsight').textContent=insight;
+ }
+ window.addEventListener('mitbudget-profile-updated',()=>{
+   try{renderForecast()}catch(e){}
+   document.querySelectorAll('#whatForm input,#whatForm select').forEach(el=>el.dispatchEvent(new Event('input',{bubbles:true})));
+ });
+ window.addEventListener('mitbudget-profile-changed',()=>window.MitBudgetProfileEngine?.notify?.());
+ window.addEventListener('storage',e=>{if(e.key==='mitbudget_profile_v1')window.MitBudgetProfileEngine?.notify?.()});
+ document.addEventListener('DOMContentLoaded',()=>setTimeout(mount,350));setTimeout(mount,700);setInterval(renderForecast,700);
+})();
+</script>
+<style>
+/* Mit Budget – Indstillinger */
+#mbSettingsBtn{
+ position:fixed;top:18px;right:18px;width:44px;height:44px;border-radius:14px;
+ border:1px solid rgba(255,255,255,.10);background:rgba(20,25,23,.92);color:#fff;
+ display:flex;align-items:center;justify-content:center;font-size:21px;z-index:9998;
+ box-shadow:0 8px 26px rgba(0,0,0,.25);cursor:pointer;-webkit-tap-highlight-color:transparent
+}
+#mbSettingsBtn:active{transform:scale(.96)}
+#mbSettingsOverlay{position:fixed;inset:0;background:rgba(0,0,0,.58);backdrop-filter:blur(8px);z-index:10000;
+ display:none;align-items:flex-end;justify-content:center;padding:0}
+#mbSettingsOverlay.show{display:flex;animation:mbFade .2s ease}
+#mbSettingsPanel{width:min(680px,100%);max-height:91vh;overflow:auto;background:#111715;color:#f5f7f6;
+ border-radius:26px 26px 0 0;border:1px solid rgba(255,255,255,.09);padding:18px 18px calc(24px + env(safe-area-inset-bottom));
+ box-shadow:0 -20px 60px rgba(0,0,0,.45);animation:mbSlide .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes mbFade{from{opacity:0}to{opacity:1}} @keyframes mbSlide{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mbSetHandle{width:42px;height:4px;border-radius:9px;background:#47514d;margin:0 auto 18px}
+.mbSetHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px}
+.mbSetHead h2{margin:0;font-size:24px;letter-spacing:-.5px}.mbSetHead p{margin:7px 0 0;color:#9ba7a1;font-size:13px;line-height:1.45}
+.mbClose{width:38px;height:38px;border:0;border-radius:12px;background:#202925;color:#fff;font-size:21px;cursor:pointer}
+.mbSetCard{background:#171f1c;border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:16px;margin:12px 0}
+.mbSetTitle{font-size:15px;font-weight:750;margin-bottom:4px}.mbSetSub{font-size:12px;color:#8e9a94;margin-bottom:14px;line-height:1.4}
+.mbSeg{display:flex;gap:7px;flex-wrap:wrap}.mbSeg button{flex:1;min-width:90px;padding:11px 10px;border-radius:12px;border:1px solid #2a3530;background:#111715;color:#cbd2ce;font-weight:650;font-size:13px;cursor:pointer}
+.mbSeg button.active{background:#1c6b50;border-color:#2b9b73;color:#fff}
+.mbRow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 0}.mbRow+.mbRow{border-top:1px solid rgba(255,255,255,.06)}
+.mbRow label{font-size:14px;font-weight:650}.mbCounter{display:flex;align-items:center;gap:11px}.mbCounter button{width:34px;height:34px;border-radius:10px;border:1px solid #304039;background:#202925;color:#fff;font-size:19px;cursor:pointer}.mbCounter span{min-width:20px;text-align:center;font-weight:750}
+.mbCounter button:disabled{opacity:.28;cursor:not-allowed;transform:none}
+.mbLockedHint{font-size:12px;color:#789087;margin-top:10px;display:none}
+.mbLockedHint.show{display:block}
+.mbSelect{width:100%;padding:12px;border-radius:12px;border:1px solid #2a3530;background:#111715;color:#fff;font-size:14px}
+.mbInfo{border-left:3px solid #2b9b73;background:rgba(43,155,115,.08);padding:13px;border-radius:10px;color:#aeb8b3;font-size:12px;line-height:1.5;margin:14px 0}
+.mbActions{display:flex;gap:10px;margin-top:18px}.mbActions button{flex:1;padding:13px;border-radius:13px;border:1px solid #34423c;font-weight:750;cursor:pointer;font-size:14px}.mbCancel{background:transparent;color:#cbd2ce}.mbSave{background:#21845f;color:#fff;border-color:#21845f!important}
+@media(min-width:700px){#mbSettingsOverlay{align-items:center;padding:20px}#mbSettingsPanel{border-radius:26px;max-width:620px;padding-bottom:24px}}
+</style>
+
+<button id="mbSettingsBtn" aria-label="Indstillinger">⚙</button>
+
+<div id="mbSettingsOverlay" aria-hidden="true">
+ <section id="mbSettingsPanel" role="dialog" aria-modal="true" aria-label="Indstillinger">
+  <div class="mbSetHandle"></div>
+  <div class="mbSetHead">
+   <div><h2>Indstillinger</h2><p>Tilpas din profil og gør dine prognoser mere personlige.</p></div>
+   <button class="mbClose" id="mbSettingsClose">×</button>
+  </div>
+
+  <div class="mbSetCard">
+   <div class="mbSetTitle">Fortæl lidt om dig selv</div>
+   <div class="mbSetSub">Oplysningerne er frivillige og bruges kun som en startreference. Du kan altid ændre dem.</div>
+   <div class="mbSetTitle" style="margin-top:15px">Din husstand</div>
+   <div class="mbSetSub">Hvem bor i din husstand?</div>
+   <div class="mbSeg" data-field="household">
+    <button data-value="alone">Alene</button><button data-value="couple">Par</button><button data-value="family">Familie</button>
+   </div>
+   <div class="mbSetSub" style="margin:10px 0 0">Valget sætter et udgangspunkt, som du altid kan justere nedenfor.</div>
+   <div id="mbHouseholdHint" class="mbLockedHint"></div>
+   <div class="mbRow"><label>Voksne i husstanden</label><div class="mbCounter"><button id="mbAdultsMinus" data-counter="adults" data-delta="-1">−</button><span id="mbAdults">1</span><button id="mbAdultsPlus" data-counter="adults" data-delta="1">+</button></div></div>
+   <div class="mbRow"><label>Børn i husstanden</label><div class="mbCounter"><button id="mbChildrenMinus" data-counter="children" data-delta="-1">−</button><span id="mbChildren">0</span><button id="mbChildrenPlus" data-counter="children" data-delta="1">+</button></div></div>
+  </div>
+
+  <div class="mbSetCard">
+   <div class="mbSetTitle">Aldergruppe</div>
+   <div class="mbSetSub">Matcher Danmarks Statistiks aldersgrupper i FU18, så referencegruppen kan vælges direkte.</div>
+   <select id="mbAge" class="mbSelect"><option value="">Vælg aldergruppe (valgfrit)</option><option>Under 30</option><option>30–44</option><option>45–59</option><option>60–74</option><option>75+</option></select>
+  </div>
+
+  <div class="mbSetCard">
+   <div class="mbSetTitle">Transport</div>
+   <div class="mbSetSub">Har du adgang til bil?</div>
+   <div class="mbSeg" data-field="car"><button data-value="no">Nej</button><button data-value="yes">Ja</button></div>
+  </div>
+
+  <div class="mbInfo"><b>Sådan bruges oplysningerne</b><br>De ændrer ikke dine registrerede indtægter eller udgifter. De bruges kun til at tilpasse statistiske referencer og estimater, når appen mangler nok personlig historik.</div>
+  <div class="mbProfileImpact"><b>Ændrer du noget senere?</b><br>Prognoser og DST-referencer opdateres automatisk med det samme. Dine allerede registrerede budgettal og køb bliver aldrig ændret.</div>
+
+  <div class="mbActions"><button class="mbCancel" id="mbSettingsCancel">Annuller</button><button class="mbSave" id="mbSettingsSave">Gem ændringer</button></div>
+ </section>
+</div>
+
+<script>
+(function(){
+ const KEY='mitbudget_profile_v1';
+ const defaults={household:'',adults:1,children:0,age:'',car:''};
+ let profile={...defaults};
+ try{profile={...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){}
+
+ const $=s=>document.querySelector(s);
+
+ function inferHousehold(){
+   // Children always means family
+   if(profile.children > 0) return 'family';
+   if(profile.adults <= 1) return 'alone';
+   return 'couple';
+ }
+
+ function syncHousehold(){
+   if(!profile.household) profile.household=inferHousehold();
+
+   // Keep the data logically consistent with the selected household
+   if(profile.household==='alone'){
+     profile.adults=1;
+     profile.children=0;
+   }
+   if(profile.household==='couple'){
+     profile.adults=2;
+     profile.children=0;
+   }
+   if(profile.household==='family'){
+     profile.adults=Math.max(1,profile.adults);
+     profile.children=Math.max(1,profile.children);
+   }
+ }
+
+ function render(){
+   syncHousehold();
+
+   $('#mbAdults').textContent=profile.adults;
+   $('#mbChildren').textContent=profile.children;
+   $('#mbAge').value=profile.age||'';
+
+   document.querySelectorAll('.mbSeg').forEach(g=>g.querySelectorAll('button').forEach(b=>{
+     b.classList.toggle('active', profile[g.dataset.field]===b.dataset.value);
+   }));
+
+   // Lock counters when the selected household has a fixed definition
+   const isAlone=profile.household==='alone';
+   const isCouple=profile.household==='couple';
+
+   $('#mbAdultsMinus').disabled=isAlone || isCouple;
+   $('#mbAdultsPlus').disabled=isAlone || isCouple;
+   $('#mbChildrenMinus').disabled=isAlone || isCouple;
+   $('#mbChildrenPlus').disabled=isAlone || isCouple;
+
+   const hint=$('#mbHouseholdHint');
+   if(isAlone){
+     hint.textContent='Alene betyder 1 voksen og 0 børn.';
+     hint.classList.add('show');
+   }else if(isCouple){
+     hint.textContent='Par betyder 2 voksne og 0 børn. Vælg Familie, hvis der er børn i husstanden.';
+     hint.classList.add('show');
+   }else if(profile.household==='family'){
+     hint.textContent='Du kan selv justere antal voksne og børn.';
+     hint.classList.add('show');
+   }else{
+     hint.classList.remove('show');
+   }
+ }
+
+ function open(){
+   render();
+   $('#mbSettingsOverlay').classList.add('show');
+   $('#mbSettingsOverlay').setAttribute('aria-hidden','false');
+ }
+ function close(){
+   $('#mbSettingsOverlay').classList.remove('show');
+   $('#mbSettingsOverlay').setAttribute('aria-hidden','true');
+ }
+
+ $('#mbSettingsBtn').addEventListener('click',open);
+ $('#mbSettingsClose').addEventListener('click',close);
+
+ $('#mbSettingsCancel').addEventListener('click',()=>{
+   try{profile={...defaults,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){profile={...defaults}}
+   close();
+ });
+
+ $('#mbSettingsOverlay').addEventListener('click',e=>{
+   if(e.target===$('#mbSettingsOverlay'))close();
+ });
+
+ document.querySelectorAll('.mbSeg').forEach(g=>g.addEventListener('click',e=>{
+   if(e.target.tagName!=='BUTTON')return;
+   const value=e.target.dataset.value;
+   profile[g.dataset.field]=value;
+
+   if(g.dataset.field==='household'){
+     if(value==='alone'){ profile.adults=1; profile.children=0; }
+     if(value==='couple'){ profile.adults=2; profile.children=0; }
+     if(value==='family'){
+       profile.adults=Math.max(1,profile.adults);
+       profile.children=Math.max(1,profile.children);
+     }
+   }
+   render();
+ }));
+
+ document.querySelectorAll('[data-counter]').forEach(b=>b.addEventListener('click',()=>{
+   if(b.disabled) return;
+   const k=b.dataset.counter;
+   const delta=+b.dataset.delta;
+   const min=k==='adults'?1:0;
+   profile[k]=Math.max(min,profile[k]+delta);
+
+   // Manual edits intelligently update the household type
+   profile.household=inferHousehold();
+
+   // If user adds a child, automatically become Family
+   if(k==='children' && profile.children>0) profile.household='family';
+
+   render();
+ }));
+
+ $('#mbAge').addEventListener('change',e=>profile.age=e.target.value);
+
+ $('#mbSettingsSave').addEventListener('click',()=>{
+   syncHousehold();
+   localStorage.setItem(KEY,JSON.stringify(profile));
+   window.dispatchEvent(new CustomEvent('mitbudget-profile-changed',{detail:profile}));
+   window.MitBudgetProfileEngine?.notify?.();
+   close();
+ });
+
+ window.mitBudgetProfile=()=>({...profile});
 })();
 </script>
 
