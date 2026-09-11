@@ -1802,7 +1802,7 @@ oninput="updateBudget()">
 
 <div>
 Tal og skattesatser er baseret på offentligt tilgængelige oplysninger fra
-Skattestyrelsen og Skatteministeriet for 2026.<br>Forbrugsreferencer i prognosen er baseret på Danmarks Statistiks Forbrugsundersøgelse 2024 (Statistikbanken/FU13).
+Skattestyrelsen og Skatteministeriet for 2026.<br>Forbrugsreferencer i prognosen er baseret på Danmarks Statistiks senest tilgængelige Forbrugsundersøgelse og Statistikbanken (FU13/FU18).
 </div>
 
 <div style="margin-top:8px;">
@@ -4111,10 +4111,17 @@ window.MitBudgetProfileEngine=(function(){
      else if(cr>0){rate=cr;source='denne måned'}
      // DST bruges kun som blød startreference, og kun når brugeren mangler data for kategorien.
      // For at undgå et kunstigt højt forecast bruges højst 35 % af DST-reference, indtil "Fortæl om dig selv" giver husstandsprofil.
-     else if(!normalSoFar.length&&DST_MONTHLY[c]){
-       const profileFactor=window.MitBudgetProfileEngine?.categoryMultiplier(c)||1;
-       rate=(DST_MONTHLY[c]*profileFactor/totalDays)*.35;
-       source='profiltilpasset dansk reference';usedDst=true
+     else {
+       const ref=window.MitBudgetProfileEngine?.directReference?.(c);
+       if(ref?.value){
+         rate=Number(ref.value)/totalDays;
+         source='officiel DST-reference · '+(ref.source||'');
+         usedDst=true;
+       }else if(DST_MONTHLY[c]){
+         rate=DST_MONTHLY[c]/totalDays;
+         source='dansk reference';
+         usedDst=true;
+       }
      }
      if(rate>0){dailyRate+=rate;categoryForecast.push({category:c,rate,expected:rate*Math.max(0,totalDays-day),source})}
    });
